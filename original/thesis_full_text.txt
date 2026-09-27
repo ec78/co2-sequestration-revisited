@@ -1,0 +1,1752 @@
+ OCEAN SEQUESTRATION OF CO2/N2 MIXTURES
+
+         A REPORT SUBMITTED TO THE DEPARTMENT OF
+                         PETROLEUM ENGINEERING
+                         OF STANFORD UNIVERSITY
+
+IN PARTIAL FULFILLMENT OF THE REQUIREMENTS FOR THE
+                    DEGREE OR MASTER OF SCIENCE
+
+                                                               By
+                                                        Erica Clower
+                                                        August, 2002
+
+                                                                                                                                 1
+2
+I certify that I have read this report and that in my opinion it is fully
+adequate, in scope and in quality, as partial fulfillment of the degree of
+Master of Science in Petroleum Engineering.
+
+       ___________________________________________________
+                                      Dr. Franklin Orr
+                                      (Principal Advisor)
+
+                                                                                                                                 3
+4
+Abstract
+
+CO2 ocean sequestration provides a promising alternative for reducing greenhouse gas
+emissions provided an economic process is developed. The need to find a low cost
+process for long term CO2 sequestration is the drive behind this study of the direct ocean
+release of CO2/N2 mixtures. Emitted flue gases are usually at most 15% CO2 with the
+remainder consisting primarily of N2. Processes that involve the direct release of pure
+CO2 first require capture and separation of CO2 from those flue gases. The direct release
+of low purity CO2/N2 mixture eliminates the costly step of separation. Furthermore, N2
+discourages the formation of hydrate, leading to greater dissolution rates at injection
+depths below 500 m.
+
+This report discusses existing models of both pure CO2 release and the P-GLAD model
+for low purity CO2 injection developed by Saito et al. (2001). From the existing pure
+CO2 direct release models a numeric model for direct mixture release is developed. The
+direct release of 15%, 50%, 85% and 100% from injection depths of 300, 500, 1000, and
+1500 meters is simulated.
+
+Finally the simulation results are used to compare the estimated cost of mixed gas direct
+release to that of the P-GLAD and pure CO2 release. It is estimated that mixed gas direct
+release costs 118$/ton CO2. This is less than the estimate cost of liquid CO2 release
+(126$/ton CO2), but double the estimated cost of the P-GLAD process ($68/ton CO2).
+
+                                                                                                                                 5
+6
+7
+Acknowledgments
+
+Firstly, thanks to Dr. Franklin Orr for his continuous support and guidance throughout
+this study. His confidence and trust in my ability enabled me to accomplish far more than
+I imagined.
+
+Additional thanks go to Dr. Peter Brewer and the Monterey Bay Aquarium Research
+Institute for providing me with the unique opportunity to accompany them during field
+experiments. Nothing solidifies the equations and numbers more than observing them in
+action.
+
+I am grateful to Dr. Khalid Aziz for his help understanding and simulating two-phase
+flow in pipes.
+
+Thank you to all my friends who have listened to numerous exciting talks of gas bubbles
+and other such fascinations. I could not have made it through without their support.
+
+I am incredibly indebted to Ray and Mark (and their kitchen table, at which the better
+portion of this was written). Thank you for doing so much without any obligation to do
+any of it at all.
+
+Thank you, Cathy, for helping me see the beauty outside my bubbles.
+
+Finally, deep gratitude is due to my family and all those who have given their
+unconditional love and support throughout my life. Without my Mom and Dad I would
+never go the places I go, do the things I do, or learn the things I learn. To my sister, Sha,
+thank you for teaching me which standards are important.
+
+                                                                                                                                 8
+9
+Contents
+
+Abstract ................................................................................................v
+
+Acknowledgments .................................................................................vii
+
+Contents ..............................................................................................ix
+
+List of Tables .........................................................................................xi
+
+List of Figures ......................................................................................xiii
+
+1. Introduction                      1
+
+2. Chemistry of Ocean Sequestration  3
+
+2.1 Phase Behavior ........................................................................3
+
+          2.1.1 Hydrates....................................................................3
+
+          2.1.2 Pure Carbon Dioxide Phase Behavior .................................5
+
+          2.1.3 Carbon Dioxide and Nitrogen Mixture Phase Behavior .............7
+
+2.2 Ocean Sequestration Processes ......................................................9
+
+3. P-GLAD Model                      11
+
+3.1 Governing Equations ................................................................12
+
+          3.1.1 Conservation Equations ................................................12
+
+          3.1.2 Bubble Transportation: Drift Flux Equations .......................14
+
+3.2 Calculating Mass Transfer Coefficient ............................................15
+
+3.3 Simplified Model .....................................................................17
+
+          3.3.1 The Upriser: Multiphase Flow in a Pipe .............................17
+
+          3.3.2 The Downriser: Single Phase Flow in a Pipe ........................18
+
+          3.3.3 Boundary and Initial Conditions .......................................19
+
+          3.3.4 Solving the Model .......................................................19
+
+4. Single Bubble Release             21
+
+4.1 Governing Equations ................................................................21
+
+          4.1.1 Bubble Transportation ..................................................21
+
+          4.1.2 Mass Transfer ............................................................23
+
+4.2 Determining Seawater Properties ..................................................24
+
+4.3 Determining Bubble Properties ....................................................26
+
+          4.3.1 Bubble Density ......................................................... 27
+
+                                     10
+4.3.2 Carbon Dioxide Solubility in Seawater ..............................27
+
+4.3.3 Mass Transfer Coefficient .............................................28
+
+5. Simulation Results and Discussion  33
+
+5.1 CO2/N2 Mixed Gas Single Bubble Release .......................................33
+
+5.1.1 Mass Transfer Coefficient Analysis ....................................33
+
+5.1.2 Simulator Output ........................................................35
+
+5.1.3 Rise Velocity.... .........................................................35
+
+5.1.4 CO2 Dissolution ...................... ...................................54
+5.1.5 Variations in Bubble Diameter ........................................58
+
+5.2 P-GLAD Simulation .................................................................60
+
+5.2.1 Water Flow Rates ........................................................60
+
+5.2.2 Predicted Dissolution Capability ......................................61
+
+5.3 Economic Comparison and Analysis ..............................................62
+
+5.3.1 Cost Factors ..............................................................62
+
+5.3.2 Cost Estimation ..........................................................63
+
+6. Conclusion                         66
+
+References ..........................................................................................68
+
+Appendix A: MATLAB Code ...................................................................73
+
+                                      11
+List of Tables
+
+Table 4-1: Reported CO2 Mass Transfer Coefficients.........................................29
+Table 5-1: Predicted Fluid Volumetric Flow Rates and Velocities fort the P-GLAD
+System................................................................................................61
+Table 5-2: P-GLAD and Direct Release of Liquid CO2 Cost Comparison ................63
+Table 5-2: Cost Comparison including Low Purity Mixture Release ........................65
+
+                                                                                                                                12
+13
+List of Figures
+
+Figure 2-1: Experimental CO2 bubble shrinkage, with and without hydrate formation and
+predicted CO2 bubble shrinkage(interpolated from Mori and Mochizuki, 1998).............4
+Figure 2-2: Experimental CO2 hydrate bubble shrinkage and predicted shrinkage
+(interpolated from Mori and Mochizuki, 1998)...................................................5
+Figure 2-3: CO2 phase behavior (adapted from Brewer et al., 2000) ..........................6
+Figure 2-4: CO2 and seawater density comparison ..............................................7
+Figure 2-5: Variations in hydrate formation pressure of CO2/N2 mixture in response to
+temperature and composition variations (CSMHYD Sloan, 1998) ............................8
+Figure 3-1: J-Tube system (Saito et al., 2000) ..................................................11
+Figure 4-1: Oceanic temperature and pressure profiles (SEAWATER 1994) ..............25
+Figure 4-2: Variation in mixture density from CO2/N2 concentration variations ..........26
+Figure 4-3: CO2 solubility in seawater (interpolated from Mori and Mochizuki, 1998)...27
+Figure 5-1: Effect of mass transfer coefficient on dissolution of 50% CO2 bubble........33
+Figure 5-2: Effect of mass transfer coefficient on dissolution of bubbles from 500 m ...34
+Figure 5-3: Simulator output; 1 cm bubble of 15% CO2 injected at 300 m..................36
+Figure 5-4: Simulator output; 1 cm bubble of 15% CO2 injected at 500 m .................37
+Figure 5-5: Simulator output; 1 cm bubble of 15% CO2 injected at 1000 m ................38
+Figure 5-6: Simulator output; 1 cm bubble of 15% CO2 injected at 1500 m ...............39
+Figure 5-7: Simulator output; 1 cm bubble of 50% CO2 injected at 300 m..................40
+Figure 5-8: Simulator output; 1 cm bubble of 50% CO2 injected at 500 m..................41
+Figure 5-9: Simulator output; 1 cm bubble of 50% CO2 injected at 1000 m................42
+Figure 5-10: Simulator output; 1 cm bubble of 50% CO2 injected at 1500 m...............43
+Figure 5-11: Simulator output; 1 cm bubble of 85% CO2 injected at 300 m................44
+Figure 5-12: Simulator output; 1 cm bubble of 85% CO2 injected at 500 m................45
+Figure 5-13: Simulator output; 1 cm bubble of 85% CO2 injected at 1000 m...............46
+Figure 5-14: Simulator output; 1 cm bubble of 85% CO2 injected at 1500 m...............47
+Figure 5-15: Simulator output; 1 cm bubble of 100% CO2 injected at 300 m...............48
+Figure 5-16: Simulator output; 1 cm bubble of 100% CO2 injected at 500 m...............49
+Figure 5-17: Simulator output; 1 cm bubble of 100% CO2 injected at 1000 m............50
+
+                                                                                                                                14
+Figure 5-18: Simulator output; 1 cm bubble of 100% CO2 injected at 1500 m............51
+Figure 5-19: Travel time of bubble injected at 300m ..........................................52
+Figure 5-20: Travel time of bubble injected at 500m ..........................................52
+Figure 5-21: Travel time of bubble injected at 1000m ........................................53
+Figure 5-22: Travel time of bubble injected at 1500m ........................................53
+Figure 5-23: Percent CO2 lost with depth when injected at 300 m...........................55
+Figure 5-24: Percent CO2 lost with depth when injected at 500 m ...........................55
+Figure 5-25: Percent CO2 lost with depth when injected at 1000 m ..........................56
+Figure 5-26: Percent CO2 lost with depth when injected at 1500 m ..........................56
+Figure 5-27: Mass of CO2 dissolved with depth when injected at 1500 m ..................57
+Figure 5-28: Effect of bubble diameter on dissolution rate; 50% CO2 bubble injected at
+500 m.................................................................................................58
+Figure 5-29: Effect of bubble diameter on rise rate; 50% CO2 bubble injected at 500 m
+.........................................................................................................59
+Figure 5-30: P-GLAD water injection rates and corresponding downriser bottom
+pressures..............................................................................................60
+Figure 5-31: Required P-GLAD dissolution pipe length (Saito et al., 2001) ...............62
+
+                                                                                                                                15
+Chapter 1
+
+1. Introduction
+
+The energy usage of our growing worldwide population has resulted rising levels of
+greenhouse gas emissions. Over the past 150 years, atmospheric CO2 concentrations have
+risen from 280 ppm to 370 ppm as a result of fossil fuel usage. It is estimated that CO2
+worldwide emissions in 1990 were greater than 20 Gt of CO2 per year (DOE/ER-30194,
+1994). It is possible that atmospheric CO2 emissions will have to be limited if we are to
+continue to meet the energy demands of a growing population without contributing
+further to ecological decline. Current CO2 sequestration research examines alternative
+storage locations for waste CO2 and may provide cost-effective processes for CO2
+emissions reduction.
+
+Geological formations provide opportunities for long term CO2 storage. CO2 can be
+dissolved into the salt water of deep aquifers. Additionally, oil and gas reservoirs provide
+capped porous rock formations for CO2 storage accompanied by the possibility of
+enhanced oil recovery. Coal bed CO2 injection provides similar benefits, with long term
+CO2 storage accompanied by enhanced methane recovery.
+
+In addition to geological CO2 sequestration, current research is examining ways to take
+advantage of the ocean's large natural CO2 storage capabilities. The DOE reports that the
+ocean occupies more than 70% of the Earth's surface, giving it huge potential for CO2
+storage (Golomb). Additionally, a major portion of atmospheric CO2 eventually ends up
+in the ocean through natural processes and the quantity of CO2 to be stored in the ocean is
+small relative to the quantity already there. It is estimated by the DOE that the ocean
+would show a 0.016% increase in CO2 after disposal of all current annual carbon
+emissions (Golomb 1994). Proposed CO2 ocean sequestration techniques can be divided
+into shallow water, midwater and deepwater releases. The CO2 transportation and
+
+                                                                                                                                16
+dissolution processes of each differ due to oceanic conditions and resulting CO2 phase
+behavior.
+
+Whether geological or oceanic, nearly all current sequestration research explores storage
+of pure CO2 gas. However, waste CO2 gas is most frequently emitted in gas mixtures and
+the application of any such processes requires the separation of CO2. Gas separation is a
+costly procedure, with cost estimates of one current chemical absorption method ranging
+from $33 to $43 per ton of CO2 (Saito et al. 2001). Such costs make examining mixed
+gas sequestration, which explores the use of natural processes to eliminate the separation
+step, worthwhile. Such work is not only applicable to gas sequestration, but could also
+have widespread implications to all gas separation.
+
+Recently, a team of Japanese researchers proposed the P-GLAD system for low purity
+CO2 ocean disposal (Saito et al. 2001). The P-GLAD system consists of an inverse J
+pipeline and takes advantage of the gas lift effect to allow for shallow water injection of
+low purity gaseous CO2 and deepwater release of dissolved CO2. The system eliminates
+the costly steps of gas separation and CO2 liquefacation yet provides the environmental
+advantage of deepwater disposal. The experimental and numerical work of Saito et al
+,(2001) demonstrates the economic advantage the P-GLAD system holds over direct
+liquid CO2 release.
+
+This report explores further mixed gas ocean release. It numerically examines direct
+ocean release of CO2 and N2 gas mixtures. It then compares these results to those found
+for the P-GLAD system. Chapter 2 provides background information on phase behavior
+and its role in ocean CO2 sequestration. Chapter 3 and Chapter 4 provide a detailed
+discussion of the P-GLAD and open water bubble release models, respectively. They
+include discussions of the governing equations and assumptions of each model. Finally,
+Chapter 5 presents and discusses the simulation results and Chapter 6 highlights the
+conclusions of this study.
+
+                                                                                                                                17
+Chapter 2
+
+2. Chemistry of Ocean Sequestration
+
+Ocean sequestration involves complex systems that build on the basic concepts of phase
+behavior, multiphase flow, and mass transfer. This chapter begins with a discussion of
+hydrates and their impact on CO2 sequestration. It then covers the basic phase behavior
+of CO2, N2, and CO2/ N2 mixtures. Finally, it shows the application of phase behavior in
+proposed CO2 ocean sequestration technology.
+
+2.1. Phase Behavior
+
+Thermodynamics governs the properties of chemical components at varying pressures and
+temperatures. The temperatures and pressures of oceans, and the variations of those
+conditions with depth, makes phase behavior a key component to ocean sequestration. In
+the case of hydrocarbon ocean sequestration, low temperatures and high pressure induce
+the formation of hydrates. Hydrate formation must be accounted for in ocean
+sequestration models, as hydrates posses unique properties and alter mass transfer and
+bubble transport processes.
+
+2.1.1 Hydrates
+Hydrates are crystalline structures that form when hydrocarbons are in water at low
+temperatures and high pressures. Water molecules form a cage like structure which
+encases the hydrocarbon molecule. Much about hydrate behavior remains debated. For
+example, there is a great deal of uncertainty surrounding the exact formation,
+dissociation, and dissolution processes of hydrates. However, the importance of hydrate
+formation in CO2 ocean sequestration has been recognized and has spurred a great deal of
+research.
+
+                                                                                                                                18
+In an early study on CO2 dissolution behavior, Aya et al. (1992) report that the
+dissolution rate through a CO2 hydrate coated bubble is lower than that through a bubble
+without hydrate. This idea is consistently supported throughout the literature. Figure 2-1
+compares predictions from bubble models excluding hydrate formation and experimental
+data from Mori and Mochizuki (1998). The data in experiments where hydrate
+formation is not observed closely matches numerical predictions. However, the data
+collected when hydrate formation is observed shows slower bubble dissolution than
+predicted. Figure 2-2 compares the data from hydrate observed experiments to
+predictions using a modified modeling accounting for hydrate behavior. Brewer et al.
+(2000) finds even slower dissolution rates than those reported by Mori and Mochizuki
+(1998) during in situ deep sea bubble experiments.
+
+                                                                                                                                19
+Figure 2-1: Experimental CO2 bubble shrinkage, with and without hydrate formation
+(bottom), and predicted CO2 bubble shrinkage (interpolated from Mori and Mochizuki,
+1998)
+
+                                                                                                                                20
+Figure 2-2: Experimental CO2 hydrate coated bubble shrinkage and predicted CO2
+hydrate coated bubble shrinkage(interpolated from Mori and Mochizuki, 1998)
+
+Brewer et al. (2000) points out that the formation of hydrates can have an important
+impact on the success of a sequestration project. Hydrate formation can benefit
+deepwater sequestration by increased sequestration time resulting from reduced CO2
+transfer rates. However, hydrate formation at shallower depths can result in ineffective
+sequestration if CO2 is slowed enough that droplets reach the mixed zone without total
+dissolution. Failure to include and properly account for hydrate formation in a
+sequestration project can result in enormous economic costs.
+
+2.1.2 Pure Carbon Dioxide Phase Behavior
+Figure 2-3 graphs the gas-liquid transition line and the phase boundary for CO2 hydrate
+formation for given depths and temperature. Phase behavior of CO2 controls the density
+of CO2 and thus the transportation process of injected CO2 bubbles. Increasing depths
+lead to greater CO2 densities. The rate of increase of CO2 density with depth exceeds the
+rate of increase of seawater with depth and the density of liquid CO2 becomes greater than
+
+                                                                                                                                21
+that of seawater around depths of 1800 m, as shown in Figure 2-4. Above this depth CO2
+droplets will rise and below this depth they sink.
+Of equal importance is the hydrate formation zone, the range of depths and temperatures
+over which CO2 and water form hydrate. It is important to note that CO2 hydrate
+formation can be encountered over a wide range of depths and is not limited to solely
+deep waters.
+
+             Figure 2-3: CO2 phase behavior (adapted from Brewer et al., 2000)
+
+                                                                                                                                22
+         Figure 2-4: CO2 and seawater density comparison (using temperature profile
+         described in section 4.2)
+
+2.1.3 Carbon Dioxide and Nitrogen Mixture Phase Behavior
+The phase behavior of gaseous mixtures lies between the extremes of the pure
+components of the mixture. Nitrogen as a pure element is lighter and harder to compress
+than carbon dioxide. Furthermore, nitrogen hydrates are much harder to form than carbon
+dioxide hydrates. When nitrogen is added to carbon dioxide hydrate formation pressure
+at any given temperature increases. As a result, nitrogen and carbon dioxide mixtures
+have smaller hydrate zones than pure carbon dioxide.
+
+Figure 2-5 compares predicted hydrate formation pressures for different nitrogen and
+carbon dioxide mixtures as predicted using the CSMHYD thermodynamic program
+
+                                                                                                                                23
+(Sloan, 1998). For a CO2 content below about 50% mixture hydrate formation pressure
+drastically increases. As the mixture formation pressure increases for a given
+temperature, the hydrate formation zone decreases. Pure CO2 will form hydrate at depths
+greater than 500 m at ocean pressures of approximately 50 atms and higher and ocean
+temperatures below about 279 K. In contrast, a 50/50 mixture of CO2/N2 at 50 atms
+requires a temperature of 277 K or less to form hydrate.
+
+Figure 2-5: Variations in hydrate formation pressure of CO2/N2 mixtures in response to
+temperature and composition variations (Sloan )
+A DOE report on CO2 ocean sequestration reports a maximum CO2 content of 15.4% in
+flue gases generated from coal, oil, and natural gas burnings. The hydrate formation zone
+of such mixtures is limited to extremely high depths.
+
+                                                                                                                                24
+2.2. Ocean Sequestration Processes
+
+In shallow waters of 200-400 m, gaseous CO2 is directly released through a pipe. The
+density of the CO2 is less than that of the seawater and the gas bubbles rise. During the
+bubble ascent, CO2 dissolves into the surrounding seawater. The upper mixed layer of
+the ocean extends approximately 100 m below the surface (Liro et al. 1992). To limit
+CO2 release to the atmosphere through the ocean surface, any CO2 released should be
+dissolved before reaching the upper mixed layer. Implementation of shallow water
+injection would presumably occur at ocean side power plants. Captured flue gases would
+be sent through a gas separation process. The extracted CO2 could then be injected into
+the seawater through a gas pipeline. Shallow water injection offers the most economic
+capital, energy, and transportation costs, but its long term CO2 storage capabilities are
+open to question.
+
+Midwater release has been proposed for locations offshore in ocean depths of 400-1800
+m. In midwater release processes, flue gases are captured, separated, and compressed.
+Liquefied CO2 is then transported to the intended dumping site by ship and deposited at
+the desired depth through a transportation pipe. As discussed in the previous section,
+temperature and pressure conditions at depths greater than 400 m are such that CO2 forms
+hydrates. Thus, the injected bubbles form an outer layer of hydrates and CO2 dissolution
+occurs as the hydrate coated bubbles rise. Midwater release provides greater security for
+long term CO2 storage. However, the compression and transportation of midwater release
+are costly. Saito et al. (2001) estimate the total cost of direct release of liquid CO2 at
+depths near 1000m at $118 per a ton of CO2.
+
+In addition to mid and shallow water release, storage of liquid CO2 on the sea floor has
+been proposed. This is achieved by injection of liquid CO2, after capture, separation and
+compression, at depths greater than 1800-2700 m depending on temperature profile. At
+such depths the density of liquid CO2 is greater than that of seawater. Thus, injected CO2
+sinks to the sea floor. Deepwater injection, like midwater injection, is promising for long
+
+                                                                                                                                25
+term CO2 storage. However, it is accompanied by even greater transportation and
+compressions costs than midwater release.
+Considerable research and modeling of CO2 ocean sequestration have recently been
+conducted and provide insight into the processes of CO2 transportation and dissolution in
+the ocean. However, implementation of proposed ocean sequestration techniques has
+been limited, in part, by economic restraints. The need for an economic long term CO2
+sequestration procedure is the driving force behind the models discussed in the next two
+chapters. The P-GLAD system, proposed by Saito et al.(2000), limits compression and
+separation costs, but has higher capital and transportation costs than other methods.
+Mixed gas direct release limits separation costs, but may require greater compression
+costs. The aim of this study is, in part, to provide an economic comparison of the models
+as well as a preliminary assessment of the economics.
+
+                                                                                                                                26
+Chapter 3
+
+3. P-GLAD Model
+
+                                                                                  Injected Gas
+                                                            Ambient Seawater
+
+                                       CO -rich seawater
+
+                    Figure 3-1: J-tube System (Saito et al. 2000)
+
+                                                                                                                                27
+Saito et al. (2000) propose a gas-lift J-tube system for the storage of low purity CO2
+mixtures. The system allows for shallow water injection of low purity CO2, eliminating
+the cost of gas compression that accompanies deep-water injection. After injection, CO2
+is separated from the mixture and dissolves into surrounding seawater as the gas travels
+upward through the riser via gas-lift transport mechanisms. At the top of the riser, the
+indissoluble gases are emitted from the system upon reaching the top of the riser. The
+CO2-rich seawater is then transported down the downcomber by the combined gas-lift
+and density differential effects. The Gas Lift Advanced Dissolution system proposed by
+Saito et al. (2000) provides a comparatively low cost method for CO2 sequestration by
+eliminating the necessity of pre-injection separation and gas compression. Additionally,
+the system provides the long term security of deepwater deposition and CO2 storage.
+
+3.1 Governing Equations
+
+3.1.1 Conservation Equations
+The GLAD system is a gas-liquid two-phase flow model including gas dissolution. The
+governing equations are laws of conservation of mass and momentum and the gas
+equation. The gas flow is assumed to be bubbly flow of uniform size. The assumption
+of constant temperature eliminates the necessity of the energy equation. All equations
+found in this section are discussed in Saito et al. (2000).
+
+The density and mass of the liquid and gas mixture (M and MvM) are defined as:
+
+M =  G + (1 -  ) L and M vM =  GvG + (1 -  ) LvL                                (3-1)
+
+where v is the phase velocity,  is the gas void fraction, and the subscripts G and L refer
+to the gas and liquid phases respectively.
+
+A mass and force balance yield the conservation of mass and conservation of momentum
+equations for the mixture:
+
+                                                                                        28
+                    M      + (M vM )   = qG                               (3-2)
+                    t            z                                       (3-3)
+
+                                    and
+
+(M  vM  )  +    (  G  v    2 ) + [1 -  ] LvL  = - P     -  M  g  -  4 W
+                        G              z           z                Dp
+
+t                z
+
+where P is the static pressure [Pa], qg is the gas injection rate per unit volume [kg/(m3s)],
+w is the friction stress at the wall [Pa], and Dp is the diameter of the dissolution pipe [m].
+A mass balance on gas must be included to account for gas dissolution:
+
+              ( G )   +    ( GvG )  =  qG     - G                        (3-4)
+                 t             z                                         (3-5)
+
+where the gas dissolution rate g is given by
+
+              G = 4 rb2nb k L M g (CS - C )
+
+and rb is the bubble radius [m], nb is the number bubbles, kL is the mass-transfer
+coefficient, Mg is the molar mass of gas [mol], Cs is the saturated molar concentration
+[mol/m3], and C is the molar concentration in the liquid [mol/m3].
+
+Assuming a conservative system of bubbles, a mass balance on the number of bubbles is
+performed:
+
+              nb + (nbvG ) = qG                                          (3-6)
+              t            z  mG 0
+
+where mG0 is the initial mass of injected bubbles[kg].
+
+                                                                                         29
+3.1.2 Bubble Transportation: Drift Flux Equations
+The drift flux model describes the multiphase flow within the system pipes. The drift
+flux model and its accompanying equations found in this section are discussed by Chen
+(2001).
+
+The superficial velocities of each phase (JL and JG) are defined by:
+
+JL  =  QL                            and  JG  =  QG                   (3-7)
+        A                                         A
+
+where QL and QG are the volumetric flow rates of the liquid and gas phases, respectively,
+and A is the pipe cross sectional area.
+
+The total mixture velocity given by
+
+                                       JM = JL + JG .                 (3-8)
+
+In multiphase flow, differing phase properties, like density and velocity, result in unique
+phase velocities. The different velocities lead to the "slip" and "hold-up" of the phases
+relative to one another. Consequently, the in situ void fractions are not equal to the initial
+injection fractions (Chen 2001). The in situ gas volume fraction  is given by:
+
+     = AG                                                             (3-9)
+          A
+
+where AG is the area occupied by gas.
+
+                                                                                       30
+The average in situ velocities of each phase are calculated from the in situ volume
+fraction:
+
+       uL  =    JL                                                                   (3-10)
+                                                                                     (3-11)
+              (1-  )
+
+              and
+
+       uG  =  JG  .
+              
+
+Finally, Saito et al. (2001) use the following correlation between in situ gas velocity and
+total mixture velocity:
+
+       uG = B0 J + U G                                                               (3-12)
+
+where
+
+                          B0 = 1.2 - 0.2 G  L                                        (3-13)
+                                             and                                     (3-14)
+
+                         U G = 1.41[ L g( L - G )  L 2 ]
+
+and L is the interfacial tension.
+
+3.2 Calculating Mass Transfer Coefficient
+
+The mass transfer coefficient is a key factor in the numerical J-tube model. Saito et al.
+(2000) conducted small scale bubble visualization experiments to determine a mass
+transfer coefficient. The experiments utilized video equipment to observe bubble
+interfacial area and volume of bubbles over time. Additionally, average bubble rise
+velocity was measured. Calculating the mass transfer coefficient, kL, from the data
+collected starts with:
+
+                                                                                           31
+dCB (t)            =  -kL  (t) AT  (t)[Cs (t)  -  C (t)]                              (3-15)
+  dt
+
+where CB(t) is mol of the bubbles, AT(t) is the total interfacial area of the bubbles, Cs(t) is
+the CO2 molar concentration of the surrounding liquid (saturation solubility of CO2 in
+water at pressure P(t)), and C is the molar concentration of CO2 in the liquid phase(
+Saito et al., 2000).
+
+CB(t) is given by
+
+                   CB (t) = [PB (t)VT (t)] RT                                         (3-16)
+
+where  is the compressibility factor and R is the gas constant (Saito et al., 2000).
+
+The average pressure inside the bubble, PB(t) is determined from
+
+                   PB (t) = P(t) + 4 L DB (t)                                         (3-17)
+
+DB(t) is the average bubble diameter and P(t) is the measured static pressure(Saito et al.,
+2000).
+
+Finally, C(t) is given by                                                             (3-18)
+                                                                                      (3-19)
+                    C (t) = Co + [CB (to ) - CB (t)]                                  (3-20)
+
+                                     AT (t) = n(t) AB (t)
+                                     VT (t) = n(t)VB (t)
+
+where Co is the initial CO2 concentration of water, AB(t) is the measured average
+interfacial area of the bubbles, n(t) is the measured number of bubbles, and VB(t) is the
+measured volume of bubbles (Saito et al., 2000). Through the experiments Saito et al.
+
+                                                                                           32
+calculate a constant mass transfer coefficient of 2.0 x 10-4 m/s, which is used throughout
+their numerical computations they use the
+
+3.3 Simplified Model
+
+The model used by Saito et al. (2001) provides accurate, detailed results, including
+unsteady flow but at the significant cost of complexity. This study examines a simpler
+model that begins by separating the J-tube into two sections, the upriser and the
+downriser. Flow in the upriser is calculated using concepts of multiphase flow in a pipe.
+Flow in the downriser is a simpler single phase flow problem controlled by the
+conservation of mass.
+
+3.3.1 The Upriser: Multiphase Flow in a Pipe
+
+Modeling flow in the upriser begins by considering the pressure gradient during
+
+multiphase flow in a vertical pipe:
+
+P  =  ML  + MG    g                  z  +  Pf                                    (3 -21)
+      QL  + QG    gc
+
+where M is the mass flow rate, Q is the volumetric flow rate, and subscripts L and G
+represent liquid and gas respectively (Govier and Aziz, 1972 ). Pf is the pressure drop
+due to irreversibilities over z. It includes the effects of friction and holdup, amongst
+other things, within the pipe.
+
+Pf is estimated by correlations developed through data collection. There are numerous
+correlations that cover a range of pipe sizes, flow regimes, and fluid pairs. They fall into
+two major categories, those that estimate fluid conditions as functions of distance within
+the pipe and those that do not. To maintain simplicity, this model uses the correlations
+of Govier et al. (1972) from the later category.
+
+The correlations of Govier et al. (1972) were developed from data collected on an air-
+water system and cover a wide range of pipe diameters and flow regimes. The correlation
+
+                                                                                 33
+plots the two-phase friction flow factor versus a reduced liquid Reynolds number, DVSL,
+and D3.5VSG (VSL and VSG are the superficial liquid and gas velocities, respectively and D
+is the pipe diameter). Pf is calculated from the relationship
+
+   Pf     =  2    V2    f tpL                  (3-22)
+   z
+                  L SL
+
+                gcD
+
+where L is the liquid density and ftpL is the two phase friction factor given by the Govier
+correlation. The data assumes constant pressure and temperature and is therefore best
+suited for point specific calculations (Govier and Aziz, 1972). Therefore, in this model
+the upriser is divided into small 5 meter sections. The fluid densities, used to calculate
+volumetric flow rates and superficial velocities, are calculated at each section using the
+Peng Robinson equation of state. The friction factor is then determined for each section
+and used to calculate a section specific Pf.
+
+3.3.2 The Downriser: Single Phase Flow in a Pipe
+It is assumed that all gases either dissolve into the seawater or are emitted through the top
+of the J-tube. Thus, flow in the downriser is single phase flow of CO2 saturated seawater.
+The pressure gradient for such flow is given by:
+
+( ) Pg                  V22            32µVLE
+=  gc  z  +  2gc             - V12  +   gcD2   (3-23)
+
+where µ is the fluid viscosity, V is the fluid velocity, and LE is the length of the pipe. For
+the J-tube model the kinetic energy term, the second term of equation 4-23, is negligible
+and can be omitted. To further simplify the model, the fluid properties, viscosity and
+density, are assumed to be constant throughout the length of the downriser.
+
+                                               34
+3.3.3 Boundary and Initial Conditions
+The initial conditions of the J-tube model differ from typical well applications in that the
+flow rate of water is not specified. The rate of injection of gas is controlled but the
+amount of seawater is not pumped into the system at a controlled rate. Instead, the flow
+of water is determined by the boundary pressures at the pipe openings and the amount of
+water the injected gas is capable of lifting. The model upriser is 200 meters long with a
+boundary at 300 meters below the surface. The downriser is 900 meters long with a
+boundary 1000 meters below the surface.
+
+3.3.4 Solving the Model
+The pressure gradient equations and the initial conditions are used to solve for the J-
+tube's pumping ability, captured by the fluid velocity variable. A guess and check
+procedure is used to find the fluid velocity that correctly solves the pressure gradient
+equations, setting the pressures at the bottom of the upriser and the bottom of the
+downriser to correct hydrostatic pressures.
+
+The 200 meter upriser is divided into 5 meter sections. Fluid properties are determined
+for each section and used along with the gas injection rate and the guessed flow rate of
+seawater to solve the pressure gradient equation in the upriser. Conservation of mass
+requires that all the water flowing from the upriser flows into the downriser. Thus, the
+velocity of the water at the top of the downriser must equal the velocity at the top of the
+upriser. This velocity is used to solve the pressure gradient in the downriser, which is
+assumed to be one long pipe with constant fluid properties. The predicted pressure at the
+bottom of the downriser is then checked against the actual hydrostatic pressure. If the
+two do not match, a new water flow rate is guessed and the procedure is repeated.
+
+                                                                                                                                35
+36
+Chapter 4
+
+4. Single Bubble Release
+
+The single bubble release model examines the transportation and dissolution processes
+that occur with the release of a single bubble of gas and various depths. The model
+predicts the velocity, bubble diameter and CO2 concentration over time. Several studies
+have numerically modeled the release of pure CO2 bubble into the ocean. Mori and
+Muchizuki (1998) examined the behavior of pure CO2 bubbles in seawater with the
+intention of better understanding the effect of hydrate formation on CO2 dissolution rates.
+Hirai et al. (1999) also provide a model of pure CO2 direct ocean release in their study on
+the environmental impacts of CO2 ocean sequestration. The past models of pure CO2
+release provide a basis upon which to build a model of mixed gas bubble release.
+
+Bubble release models are composed of two processes, gas dissolution and bubble
+transport. To accurately model bubble release the governing equations of both processes
+and the procedure to simultaneously solving those equations must be understood. Also
+essential to solving the model is correct evaluation of its parameters and properties.
+
+4.1 Governing Equations
+
+4.1.1 Bubble Transportation
+Bubble rise velocity is dependent on numerous factors, including bubble shape, density,
+and size as well as the properties of the surroundings through which it travels. In the
+case of ocean gas injection it is reasonable to assume spherical shapes with negligible
+deformation. Yabe et al. (1999) examine the validity of this assumption by examining
+the Weber number, the dimensionless number directly related to bubble deformation.
+They found a maximum Weber number in their experiments, 0.17, below the Weber
+number, 0.5, indicative of bubble deformation. Additionally, the numeric models of Mori
+and Mochizuki (1998) for rigid spheres more closely match experimental data than those
+for fluid spheres.
+
+                                                                                                                                37
+The velocity of the bubble can be found by performing a force balance on the assumed
+spherical bubble:
+
+( ) 1Db3            g  +  1    w     dU    =  1  Db3  w  - g   g  -  1  Db2       wU  2CD  (4-1)
+                          2          dt       6                      8
+6
+
+where U is the free rise velocity and CD is the drag coefficient for a sphere at steady
+velocity U.
+
+The drag coefficient, CD, is calculated from the correlation for a rigid sphere (Mori and
+Mochizuki, 1998):
+
+                ( ) CD    24                                     0.413
+                       =  Re   1 + 0.173 Re0.657      +  1  +  16300 Re  -1.09             (4-3)
+
+where Re  UDB       and w is the seawater viscosity.
+               w
+
+Solving for U,
+
+                dU + 3  CD U 2 -  (1 -  )g = 0                                             (4-2)
+
+                dt 4 Db
+
+where    g and                       w           .
+
+w                                    +  1  w  
+                                        2     
+                                  g
+
+The interdependence of Re and U makes an iterative procedure necessary to solve for U.
+This model solves a discretized form of equation 4-1,using an approximation of the time
+derivative, to numerically solve for rise velocity. The result is the following quadratic
+equation:
+
+                                                                                           38
+[ ] 3CD     U n+12
+4    D n+1          + U n+1  -  t (1 -  ) -U n  =0       (4-4).
+
+        b
+
+This equation is directly solved for the velocity within a time step. This is accomplished
+by first guessing a rise velocity and calculating the corresponding Reynolds number. The
+Reynolds number is in turn used to determine the corresponding drag coefficient. A rise
+velocity is then calculated using equation 4-4 and the guessed drag coefficient. The
+calculated velocity's corresponding Reynolds number is determined and checked against
+the guessed velocity's Reynolds number. If the two do not match, the calculated velocity
+becomes the new guessed velocity and the procedure is repeated.
+
+4.1.2 Mass Transfer
+Mori and Mochizuki (1998) sought to understand the mass transfer of CO2 from the
+bubble to the surrounding seawater by first studying just the shrinking of a stationary CO2
+bubble over time. The model is governed by the conservation of mass of CO2 yielding:
+
+            -       d     1  Db3  g    =  Db2 D W  x gs  (4-5)
+                    dt    6          
+
+where Db is the bubble diameter, D is the mass transfer coefficient, and xgs is the CO2
+solubility in seawater.
+
+The right hand side of equation 4-5 multiplies the bubble volume by bubble density
+resulting in the change of mass of the bubble over time. It is important to recognize that
+bubble diameter is not the only parameter that changes with time. As the bubble rises it
+will face changing thermodynamic conditions that lead to both changing bubble and
+seawater densities. In the case of the mixed gas bubble, different components will have
+different solubility in seawater which results in a varying bubble composition. This
+
+                                                                                         39
+further contributes to the change in bubble density over time and leads to a varying mass
+transfer coefficient, as well.
+
+Mori and Mochizuki (1998) solve equation 4-1 for the rate of change of diameter with
+time. With a pure gas bubble model it is not necessary to know the rate of change of
+mass over time. However, in the case of a mixed gas bubble the change in composition
+over time must be calculated. Because volume is not conserved, diameter change is not
+directly representative of the rate of mass loss but is rather a result of the combined
+thermodynamic changes and gas dissolution. Therefore, determining the change in
+bubble concentration requires the change in mass.
+
+This model calculates the change in mass in a given time step. It is assumed that the
+solubility of N2 in seawater is negligible, and thus the entire quantity of mass lost is CO2.
+This assumption is reasonable as the solubility of nitrogen in seawater is magnitudes of
+order below that of carbon dioxide. The entire quantity of mass lost is easily converted to
+a molar quantity, from which the change in composition is calculated. Using the
+predicted density and bubble composition at the next time step the bubble diameter is
+predicted.
+
+4.2 Determining Seawater Properties
+
+Oceanic temperature and pressure are a function of depth. The seawater temperature, in
+degrees Kelvin, is calculated using a temperature and depth correlation referenced by
+Ohmura and Mori (1998):
+
+T = 3946 + 273.6  (4-6).
+     z + 112
+
+Seawater pressure and density are determined using Morgan's SEAWATER
+computational routines written for MATLAB (1994). All calculations are determined at a
+latitude of 36.75, approximately that of Monterrey Bay, CA. Figure 4-1 displays the
+
+                                                                                         40
+ocean temperature and pressure profiles. As the figure demonstrates, pressure variation
+with depth is much greater than temperature variation. Therefore, in many seawater
+calculations, particularly those that involve only small depth variations, temperature is
+assumed constant.
+
+Figure 4-1: Oceanic temperature and pressure profiles (SEAWATER 1994)
+
+                                                                                                                                41
+4.3 Determining Bubble Properties
+
+In this model the presence of nitrogen eliminates the formation of hydrate, and all bubble
+properties are simply gas mixture properties. The dissolution of carbon dioxide into the
+seawater implies a varying bubble composition with time. Furthermore, the change in
+bubble depth implies changing pressure and temperatures. Therefore, bubble properties
+must be recalculated at each time step at the current composition, temperature, and
+pressure.
+
+Figure 4-2: Variation in mixture density resulting from CO2/N2 concentration variation
+for the temperature profile given in Figure 4-1
+
+                                                                                                                                42
+4.3.1 Bubble Density
+The Peng Robinson equation of state is used to determine the bubble phase behavior
+based on the ocean temperature and pressures at the current bubble depth. Figure 4-2
+displays the density of various composition bubbles. The figure shows decreasing
+densities with decreasing concentration of carbon dioxide. This indicates that increasing
+nitrogen concentration will increase the specific volume of a mixture, implying rising
+compressions costs with rising nitrogen concentrations.
+4.3.2 Carbon Dioxide Solubility in Seawater
+Determining the mass solubility of carbon dioxide in seawater, xgs in this model, is
+simplified by the lack of hydrate formation. Though no exact formula is available, much
+work experimental work has been done studying the change in carbon dioxide solubility
+for changing seawater pressures and temperature. This model interpolates the data used
+by Mori and Mochizuki (1998) in their pure CO2 release simulations. The solubility
+profile with depth (using the temperature profile of figure 4-1) is plotted in Figure 4-3.
+
+Figure 4-3: CO2 solubility in seawater (interpolated from Mori and Mochizuki, 1998)
+
+                                                                                                                                43
+4.3.3 Mass Transfer Coefficient
+4.3.3.1 REPORTED MASS TRANSFER COEFFICIENTS
+A good deal of discrepancy surrounds the rate of mass dissolution of CO2 into seawater.
+Furthermore, methods of measuring and reporting the CO2 mass transfer coefficient are
+inconsistent. Using reported mass transfer coefficients requires attention to the details of
+their source.
+
+Mori and Mochizuki (1998) estimate the value of the mass transfer coefficient using
+empirical correlations and a modified Wilke-Chang equation to determine the coefficient
+of diffusion of CO2 in water. The correlations define the mass transfer rate as a function
+of bubble diameter and rise velocity and seawater viscosity and density. The result is a
+mass transfer rate that varies over time and is strongly dependent on bubble velocity. The
+study examines diameter change over time, and thus the coefficient is reported in units of
+m/s.
+
+Experimental work suggests a constant mass transfer coefficient. The constant
+coefficient of 2 x 10-4 m/s used in the P-GLAD simulation by Saito et al. (2000) is one of
+the higher determined mass transfer coefficients and does not include hydrate formation.
+Hirai et al. (1996) report a mass transfer rate of 1.25 x 10-5 kg m-2 s-1 for non-hydrate
+coated bubbles.
+
+A greater amount of work deals with the mass transfer process of hydrate coated bubbles.
+Brewer et al. (2000) provide a mass transfer coefficient on the lower end of the scale,
+based on sea experiments, of 3.4 x 10-6 mol m-2 s-1 for hydrate coated bubbles. Two
+separate reports, Fujioka et al. (1994) and Aya et al. (1992), report bubble diameter
+reduction rates of 5.0 x 10-7 and 3.9 x 10-9 m/s, respectively. Tabe et al. (1999) report a
+constant mass transfer rate of CO2 through hydrate of 1.15 x 10-4 kg m-2 s-1. Hirai et al.
+(1996) report varying mass transfer rates through hydrate depending on temperature,
+pressure, and rise velocity. Their experimentally measured rates range from
+
+                                                                                                                                44
+approximately 3 x 10-4 to 1.5 x 10-3 kg m-2 s-1, but they offer no correlations for
+calculating the rates.
+
+A further complication in this model is the varying compositions of the bubbles. Saito et
+al. make no change in their mass transfer coefficient to adjust for impurities in the
+injected gas. However, as N2 increases the mass transfer rate should decrease. In this
+study it is assumed that the mass transfer coefficient for the mixed gas bubble is linearly
+proportional to the concentration of CO2 in the bubble.
+
+Table 4-1 summarizes different experimentally calculated mass transfer coefficients for
+bubbles with and without hydrate, respectively. If possible with the reported information,
+the rates have been converted into units of mol m-2 s-1 for an 85% pure carbon dioxide
+bubble at a depth of 1500 m.
+
+Table 4-1: Reported CO2 Mass Transfer Coefficients
+
+     Source             Molar       Hydrate
+                      Transfer
+    Brewer et        Coefficients      yes
+    al.(2000)        [mol m-2 s-1]     yes
+Aya et al.(1992)      3.4 x 10-6
+
+                      7.6 x 10-5
+
+Tabe et al. (1999)   3.4 x 10-3     yes
+
+Hirai et al. (1996)  1.1 x 10-7     yes
+
+                         to
+                     4.7 x 10-7
+
+Fujioka et           2.4 x 10-5     yes
+
+al.(1994)
+
+Saito et al. (2000)  2.0 x 10-4     no
+
+                     ( m/s)
+
+Hirai et al. (1996)  2.8 x 10-4     no
+
+                                                    45
+4.3.3.2 THIS MODEL
+This report compares two different methods of calculating the mass transfer coefficient.
+Method A follows the procedure used by Mori and Mochizuki (1998) and uses empirical
+correlations to calculate the mass transfer coefficient. Method B uses the mass transfer
+rate reported by Hirai et al. (1996) for non-hydrated coated bubbles. Both models
+incorporate a modified mass transfer coefficient for pure CO2 over depths of 500 m to
+account for hydrate formation. This is done using the diameter reduction rate reported by
+Fujioka et al. (1994) and equation 4-5 to calculate the mass transfer coefficient given time
+specific bubble properties.
+
+Method A:
+Mori and Mochizuki estimate the value of D using correlations for the dimensionless
+Sherwood number, Sh, which is defined as DDb/Dgw . The Sherwood number is
+determined from correlations for a rigid sphere:
+
+Sh  =  1  +  0.425 Re0.55  Sc  1                         (Re  2 x103 )        (4-6)
+                                3                        ( ) 100  Re  2 x103  (4-7)
+
+Sh  =  1+  0.724  Re 0.48  Sc  1
+                                3
+
+where                                                                         (4-8)
+                                                                              (4-9).
+                  Re  Udw
+                          w
+                                                    and
+
+                 Sc  w
+                        w Dgw
+
+Dgw, the mass diffusion coefficient of CO2 in water, is calculated using the Wilke-Chang
+equation modified as suggested by Hayduk and Laudie (1974):
+
+                                                                                                                                46
+      Dgw   =    7.4(10-8 )(2.26 * M 2 )0.5 T                                      (4-10)
+
+                            µ    V 0.6
+
+                                 21
+
+where M2 is the molecular weight of the solvent (water), T is the temperature in K, µ2 is
+
+the viscosity of the solvent, and V1 is the molecular volume of the solute (CO2).
+
+Method B:
+The mass transfer rate reported by Hirai et al.(1996) is converted to a molecular transfer
+rate using the molecular weight of CO2 :
+
+D  =  1.25  x10  -4  Db2           1000      mol CO2                               (4-11)
+                                   44.01     s 
+                            CO2
+
+where XCO2 is equal to the fraction of CO2 in the bubble. Thus, the mass transfer
+coefficient reduces with time as a result of the reducing concentration of CO2. Changes
+in bubble diameter, which can be either expansion or shrinking in the case of CO2/ N2
+mixtures, will also cause a change in the mass transfer coefficient.
+
+Hydrate Compensation
+The diameter reduction rate for a hydrate coated bubble as reported by Fujioka et al.
+(1994) is used to determine the mass transfer coefficient for pure CO2 bubbles at depths
+below 1000 m. Equation 4-5 is used to convert the reduction rate to a molar transfer rate.
+Solving for change in bubble diameter over time yields:
+
+      dDb   = 6 D    W      x gs                                                   (4-11).
+       dt            g
+
+Rearranging for D yields:
+
+                                                                                                                                47
+D  =  dDb    g                       (4-12).
+       dt  6 w xgs
+
+The mass transfer coefficient, D, is then converted to a molar transfer rate. As a result
+
+D  =  dDb  g  1000   Db2   mol CO2   (4-13)
+       dt  6  44.01        s 
+
+Ideally, the model would modify the mass transfer coefficient for all CO2/N2 mixtures
+within their hydrate formation region. However, there is insufficient work on the CO2/N2
+mixtures and hydrate formation to provide the insight necessary to model this behavior.
+
+                                                                                           48
+Chapter 5
+
+5. Simulation Results and Discussion
+
+5.1 CO2/N2 Mixed Gas Single Bubble Release
+
+5.1.1 Mass Transfer Coefficient Analysis
+
+Figure 5-1: Effect of mass transfer coefficient on dissolution of 50% CO2 bubble
+The mass transfer rate as computed following the method suggested by Mori et al.
+predicts much faster dissolution rates than the rate reported by Hirai et al. Figure 5-1
+
+                                                                                                                                49
+shows the difference between predictions for a 50% CO2, 1 cm bubble at two different
+injection depths. Figure 5-2 shows the difference between predictions for two different
+initial concentrations of a 1 cm bubble injected at 500 m. It is seen in the figures that the
+difference increases with increases in injection depth but remains relatively constant for
+changes in initial bubble concentrations.
+
+Figure 5-2: Effect of mass transfer coefficient on dissolution of bubbles injected at 500
+m
+Most experimental work more closely supports the dissolution rates observed by Hirai et
+al. (1996) than those predicted by Mori et al. (1998). This discrepancy between the
+empirical correlations and actual bubble behavior suggest a need for further investigation
+
+                                                                                                                                50
+into the dissolution rates of bubbles and development of new correlations. Such large
+differences in predictions and behavior would be costly in applications of a sequestration
+process. The remaining calculations in this section are performed using the mass transfer
+rate suggested by Hirai et al. (1996). This provides a safe estimate of injection depths
+required and economic costs based on a slow dissolution rate.
+
+5.1.2 Simulator Output
+The mixed gas bubble simulator provides a detailed graphical representation of the
+behavior of an injected mixed gas bubble. Figures 5-7-5-18 are the simulator output for
+bubble concentrations of 15%, 50%, 85%, and 100% CO2 solutions injected at depths of
+300, 500, 1000, and 1500m. All bubbles are 1 cm bubbles unless otherwise specified.
+
+The depth versus time plot allows an analysis of the bubble rise velocity by presenting
+bubble depth over time. The density plot provides insight into the main driving force
+behind bubble rise, the bubble and seawater density differential. Additionally, it displays
+the phase behavior of the mixed gas and allows comparison to the phase behavior of pure
+CO2. The remaining plots log the dissolution process, presenting the composition,
+diameter, and mass change in the bubble with depth. Combined, the plots allow a
+complete analysis of the performance of both the dissolution and transportation processes
+for any CO2/N2 mixed gas bubble injection.
+
+5.13 Rise Velocity
+Figures 5-19 - 5-22 display the travel time of different composition bubbles for four
+different injection depths. Several important trends are noticeable in the plots. Firstly, at
+greater injection depths decreases in initial bubble CO2 content increase the bubble rise
+velocity. This results from the low density and compressibility of N2. As depth increases
+the density of CO2 approaches that of the seawater. The density of N2 increases with
+depth, as well, but it does so at a much slower pace. The density plots of the simulator
+outputs show the growth in the density differential between the mixed gas bubbles and a
+pure CO2 bubble with increasing depth. Greater quantities of N2 result in a greater
+
+                                                                                                                                51
+density differential between the bubble and the seawater with the effect more predominate
+at greater depths.
+
+         Figure 5-3: Simulator output; 1 cm bubble of 15% CO2 injected at 300 m
+
+                                                                                                                                52
+Figure 5-4: Simulator output; 1 cm bubble of 15% CO2 injected at 500 m
+
+                                                                                                                     53
+Figure 5-5: Simulator output, 1 cm bubble of 15% CO2 injected at 1000 m
+
+                                                                                                                     54
+Figure 5-6: Simulator output, 1 cm bubble of 15% CO2 injected at 1500 m
+
+                                                                                                                    55
+Figure 5-7: Simulator output, 1 cm bubble of 50% CO2 injected at 300 m
+
+                                                                                                                     56
+Figure 5-8: Simulator output, 1 cm bubble of 50% CO2 injected at 500 m
+
+                                                                                                                    57
+Figure 5-9: Simulator output, 1 cm bubble of 50% CO2 injected at 1000 m
+
+                                                                                                                     58
+Figure 5-10: Simulator output, 1 cm bubble of 50% CO2 injected at 1500 m
+
+                                                                                                                     59
+Figure 5-11: Simulator output, 1 cm bubble of 85% CO2 injected at 300 m
+
+                                                                                                                     60
+Figure 5-12: Simulator output, 1 cm bubble of 85% CO2 injected at 500 m
+
+                                                                                                                     61
+Figure 5-13: Simulator output, 1 cm bubble of 85% CO2 injected at 1000 m
+
+                                                                                                                     62
+Figure 5-14: Simulator output, 1 cm bubble of 85% CO2 injected at 1500 m
+
+                                                                                                                     63
+Figure 5-15: Simulator output, 1 cm bubble of 100% CO2 injected at 300 m
+
+                                                                                                                     64
+Figure 5-16: Simulator output, 1 cm bubble of 100% CO2 injected at 500 m
+
+                                                                                                                     65
+Figure 5-17: Simulator output, 1 cm bubble of 100% CO2 injected at 1000 m
+
+                                                                                                                     66
+Figure 5-18: Simulator output, 1 cm bubble of 100% CO2 injected at 1500 m
+
+                                                                                                                     67
+Figure 5-19: Travel time of bubble injected at 300m
+
+Figure 5-20: Travel time of bubble injected 500m
+
+                                                                                                          68
+Figure 5-21: Travel time of bubble injected at 1000m
+
+Figure 5-22: Travel time of bubble injected at 1500m
+
+                                                                                                          69
+Another important note is the drastic change in bubble rise velocity of the pure CO2
+bubble at 500 m. This depth corresponds to the depth at which the pure CO2 bubble
+undergoes a phase changes and rapid expansion. The bubble diameter is a parameter in
+the velocity, both in the calculation of the Reynolds number and the overall drag force. A
+diameter increases, such as occurs at when the pure CO2 bubble changes from gas to
+liquid, the rise velocity increases. This is supported by the behavior of the mixed gas
+bubbles. The N2 content in the bubbles stays constant. Therefore as the CO2 content
+decreases and the bubbles rise, their volume increases both due to increase N2 percentage
+and decreased pressure. Consequently, the mixed gas bubbles accelerate as they rise.
+The pure CO2 bubble, on the other hand, show a rapid deceleration when their bubble
+diameter goes to zero.
+
+5.1.4 CO2 Dissolution
+Figures 5-23 ­ 5-26 graph the percent of CO2 dissolved with depth for various injection
+compositions and depths. When injected at 300 m, initial bubble composition exhibits
+little impact on the dissolution of CO2 as measured by percentage of initial composition.
+At least 95% percent of the initial CO2 of all bubbles is dissolved by the time the bubbles
+reach the upper mixed layer. As injection depth increases to 500 m, as depicted in Figure
+5-24, the dissolution rate of the pure CO2 falls below that of the mixtures. By 325 m 95%
+of the CO2 in all the mixtures has dissolved but only 65% of the pure CO2 bubble has
+been dissolved. Figures 5-8 and 5-9 suggest that at lower injection depths, a lower initial
+CO2 concentration results to faster dissolution relative to initial CO2 concentration.
+Despite the model's failure to account for the possible formation of hydrates by the 85%
+and 50% CO2 bubble when injected at 1500 m, the 15% CO2 bubble still dissolves 90% of
+initial CO2 faster than all other bubbles.
+
+The behavior of the pure CO2 bubble in Figures 5-25 and 5-26 also demonstrate the affect
+of hydrate formation on CO2 dissolution. The bubbles show a clear decrease in
+dissolution rate at depth below 500 meters, where hydrate forms.
+
+                                                                                                                                70
+Figure 5-23: Percent CO2 lost with depth when injected at 300 m
+
+Figure 5-24: Percent CO2 lost with depth when injected at 500 m
+
+                                                                                                                     71
+Figure 5-25: Percent CO2 lost with depth when injected at 1000 m
+
+Figure 5-26: Percent CO2 lost with depth when injected at 1500 m
+
+                                                                                                                     72
+It is important to consider not only the percentage of CO2 within a bubble that dissolves,
+but also the total mass of CO2 that dissolves. 90% of the CO2 in a bubble that is only
+initially 15% CO2, is a much smaller mass than 90% of a pure CO2 bubble. Figure 5-27
+plots the total mass of CO2 dissolved for various initial compositions injected at 1500 m.
+The plot emphasizes the importance of including hydrate behavior in a sequestration
+model. The 85% CO2 bubble dissolves a larger mass of CO2 in depths below
+approximately 400 m. This implies that an 85% CO2 mixture will have greater success at
+long term CO2 sequestration than pure CO2 when injected at 1500m. Or course, this
+depends on whether or not the 85% mixture itself forms hydrate. A second noteworthy
+feature of Figure 5-10 is the low mass of CO2 dissolved when the initial injection
+concentration is 50% or below. The volume of an injected gas necessary to dissolve a
+given mass of CO2 increases with an increase in the initial impurity level of that gas.
+
+         Figure 5-27: Mass of CO2 dissolved with depth when a 1 cm bubble is injected at
+        1500m
+
+                                                                                                                                73
+5.1.5 Variations in Bubble Diameter
+
+        Figure 5-28: Effect of bubble diameter on dissolution rate of 50% CO2 bubble
+        injected at 500 m
+Figure 5-28 plots the percent of CO2 lost for a 1 cm 50% bubble with depth at various
+initial bubble diameters. The plot shows a distinct decrease in dissolution rate with an
+increase in bubble diameter. From Figure 5-29 it can bee seen that bubble diameter has
+the opposite effect on bubble rise velocities. As the bubble diameter increases, the bubble
+rise velocity increases as well. From these plots it is apparent that bubble diameter is a
+key parameter in bubble dissolution and velocity.
+
+                                                                                                                                74
+Figure 5-29: Effect of bubble diameter on rise rate; 50% CO2 bubble injected at
+500 m
+
+                                                                                                                     75
+5.1 P-GLAD Simulation
+
+5.2.1 Water Flow Rates
+
+Figure 5-30: P-GLAD water injection rate and corresponding downriser bottom pressure
+(0.5 m diameter pipe, 200 m upriser, 900 m downriser, injection depth at 300 m)
+The P-GLAD system modeled in Figure 5-30 consists of a 0.5 m diameter, 200 m long
+upriser with an injection inlet at a depth of 300 m and a 0.5 m diameter, 900 m long
+downriser that disposes the fluid at 1000 m. The system transports 362.3 kg/s of water
+for a gas injection rate of 5 kg/s. Table 5-1 shows the equivalent volumetric flow rates
+and velocities at both injection and the top of the upriser .
+
+                                                                                                                                76
+Table 5-1: Predicted Fluid Volumetric Flow Rates and Velocities for the P-GLAD
+
+System
+
+                Qg (m3/s)            Vsg (m/s)  QL (m3/s)  VsL (m/s)
+
+Injection       0.066                0.339531   0.294188   1.498
+
+(300m)
+
+Top of Upriser  0.3595               1.802      0.352545   1.7954
+
+(100 m)
+
+5.2.2 Predicted Dissolution Capability
+Saito et al. (2001) report that the laboratory scale P-GLAD system dissolves over 95% of
+injected CO2. These results are for the injection of 95% CO2 gas. A later study suggests
+that the length of dissolution pipe necessary to dissolve 99.5% or more of the injected
+CO2 increases with an increase in gas impurity levels (Saito et al., 2001). For a 50 kg/s
+CO2 injection rate and an 15 m dissolution pipe the following correlation is used to
+determine the dissolution pipe length:
+
+Lp = (58.7(1 -  ) + 4.7)Db x103 [m]                                             (5-1)
+
+where  CO2 gas ratio. Figure 5-31 plots the dissolution pipe lengths predicted by
+equation 5-1 to the required injection depths for 99.5% CO2 dissolution in the P-GLAD
+system.
+
+                                                                                       77
+             Figure 5-31: Required P-GLAD dissolution pipe length (Saito et al., 2001)
+
+In comparison to Figure 5-31, the single bubble model predicts that even the 15% CO2
+bubble is 99.5% dissolved by the time it reaches the upper mixed level when injected at a
+depth of 300m. This predicted 200 m dissolution length is much less than that predicted
+by Saito et al. (2001).
+
+5.3 Economic Comparison and Analysis
+
+5.3.1 Cost Factors
+Predicting the cost of mixed gas sequestration is difficult due to a lack of available
+information regarding such processes. The aim of mixed gas injection is to reduce costs
+by eliminating the necessity of CO2 separation. Additionally, the hydrate formation zone
+is decreased by impurities resulting in a range of depths over which lower purity bubbles
+will exhibit faster dissolution than pure CO2 bubbles. However, this range of depths is
+not directly equal to the difference in the hydrate zones, as the mass transfer coefficient is
+expected to decrease with decreasing concentration of CO2 in the bubble.
+
+                                                                                                                                78
+The benefits of injecting low purity CO2 must be weighed against the costs. Increased
+impurity and injection depth lead to increased compression costs. Additionally, higher
+levels of impurities mean higher volumes of gas are necessary to transport a given
+quantity of CO2. The result is an increase in transportation costs.
+
+5.3.2. Cost Estimation
+Table 5-1 compares the cost of P-GLAD to the cost of direct release of liquid CO2 as
+reported by Saito et al .(2001). The P-GLAD costs correspond to an injection gas of
+95% purity, injected at a depth of 300 m. The direct release costs correspond to the direct
+release of liquid CO2 at an unspecified injection depth.
+
+Table 5-2: P-GLAD and Direct Release of Liquid CO2 Cost Comparison (Saito et al.,
+
+                             P-GLAD ($/ton CO2) Direct release ($/ton CO2)
+
+Separation and capture       26   43*
+
+Liquefaction                 0    64
+
+Transportation               30*  7
+
+Sequestration                12   12
+
+Total                        68   126
+
+2001)
+*Includes compression costs
+
+The compression costs of the direct release method are included in the separation and
+capture costs. For the P-GLAD process these costs are including in the transportation
+estimated. The DOE estimates compression costs to be 9$ per a ton of CO2, up to
+pressures of 100 bars (depths of 1000 m) (Wolsky et al., 1994). This yields a
+compression cost of 9 x 10-3$ per a meter of injection depth.
+
+                                                                                        79
+For the direct release of gas mixtures the separation and liquefaction costs are completely
+eliminated. Furthermore, no change in sequestration costs would arise. The cost of
+compression can be estimated assuming a linear relationship between the cost and the
+ratio of the specific volume of the mixture to specific volume of pure CO2. As the ratio
+of the specific volume of the mixture to the specific volume of CO2 increases it becomes
+more difficult to compress. The density of a mixture is the inverse of its specific volume.
+Thus the cost of compression can be estimated by
+
+Cost = 9.0 x10-3 CO2 $                                     (5-2).
+                    m
+
+                                                        g
+
+The cost of transportation can be estimated similarly. Assuming the estimated costs of 7$
+per a ton CO2, corresponds to an injection depth of 1000m, transportation costs for pure
+CO2 are
+7 x 10-3$ per a meter of injection depth. An increase in specific volume of the mixture
+signifies an increase in the volume of gas that must be transported to dispose of a given
+quantity of CO2. Therefore, it is again reasonable to assume that transportation costs for
+mixtures would be linearly related to ratio of mixture specific volume to pure CO2
+specific volume.
+
+Table 5-3 compares the estimated cost of direct release of 15% CO2 at 300m to the costs
+of both the P-GLAD system and the direct release of CO2. The increase in estimated cost
+of compression and transportation that result from the increase in impurity exceed the
+cost decrease in separation. Thus, the direct release of 15% CO2 has no economic
+advantage over the P-GLAD process. However, it is cheaper, due to the lack of
+liquefaction costs, to release 15% CO2 than to release liquid CO2. This analysis looks at
+15% CO2, because it is most representative of a flue gas mixture before separation.
+Further research into separation is necessary to examine the costs of direct release of an
+intermediate mixture between that of the P-GLAD system (95% CO2) and flue gas.
+
+                                                                                                                                80
+Table 5-3: Cost Comparison Including Low Purity Mixture Release
+
+                P-GLAD                 Pure CO2 direct           15% CO2
+
+                ($/ton CO2)               release                direct release
+                                       ($/ton CO2)               ($/ton CO2)**
+
+Separation and                     26  43*                       60*
+
+capture
+
+liquefaction                       0   64                        0
+
+transportation  30*                    7                         46
+
+Sequestration                      12  12                        12
+
+Total                              68  126                       118
+
+*Includes compression costs
+**1 cm bubbles injected at 1000 m
+
+                                                                                 81
+Chapter 6
+
+6. Conclusion
+
+The work examines the possibility of direct ocean release of CO2/N2 mixtures for CO2
+sequestration. It develops a numeric model for the direct ocean release of CO2/N2
+mixtures for CO2 sequestration built on past models and experiments of direct release of
+pure CO2 . The numeric model is used to simulate ocean release of varying composition
+mixtures at different injection depths. The simulation results are used to compare gas
+mixture release to the P-GLAD system for low purity CO2 sequestration (Saito et al.,
+2000) and the direct release of pure CO2.
+
+The simulation results show that at depths below the hydrate zone low purity mixtures
+exhibit faster dissolution rates due to the elimination of hydrate formation. At depths
+above the hydrate formation zone, the initial bubble concentration has little effect on
+bubble dissolution measured by percent of CO2 dissolved. It was found that all bubbles
+injected above 500 m dissolve 95% or more of the injected CO2 before reaching the upper
+mixed zone. It is important to note, however, that the absolute mass of CO2 dissolved
+decreases with increasing impurity.
+
+It was also shown that low purity bubbles accelerate as they rise due to the expansion of
+the insoluble gas and the decrease in bubble density. Pure CO2 bubbles, on the other,
+decelerate as their bubble diameter shrinks.
+
+The comparison of reported mass transfer coefficients shows the discrepancy in
+predictions that result from uncertainties in those coefficients. This suggests a need for
+more experimental work and the development of more accurate mass transfer coefficient
+correlations, both for pure and mixed gas bubbles.
+
+                                                                                                                                82
+Finally, this report makes an estimation of the costs of the direct release of a 15% CO2
+bubble injected at 1000 m of 118$ per a ton-CO2 injected. This compares to estimated
+costs of 68 $/ton-CO2 for the P-GLAD and 126$ per a ton-CO2 for the direct release of
+liquid CO2.
+
+                                                                                                                                83
+References
+
+Aya, I., Yamane, K., Nariai, H. "Solubility of CO2 and Density of CO2 Hydrate at 30
+         MPa". Energy, 22: 263-271, 1997.
+
+Brewer, P.G., Friedrich, G., Peltzer, E.T., and Orr, F.M. "Direct Experiments on the
+         Ocean Disposal of Fossil Fuel CO2". Science, 284: 943-945, 1999.
+
+Brewer, P.G., Peltzer, E.T., Friedrich, G., Aya, I., and Yamane, K. "Experiments on the
+         Ocean Sequestration of Fossil Fuel CO2: pH Measurements and Hydrate
+         Formation". Marine Chemistry, 72: 83-93, 2000.
+
+Chen, Y. "Modeling Gas-Liquid Flow in Pipes: Flow Pattern Transitions and Drift-Flux
+         Modeling". M.S. Report, Stanford University, Stanford, CA, 2001.
+
+Clift, R., Grace, J.R., and Weber, M.E. "Bubbles, Drops, and Particles." Academic
+         Press, Inc., New York, NY, 1978.
+
+Fan, L. and Tsuchiya, K. "Bubble Wake Dynamics in Liquids and Liquid-Solid
+         Suspensions." Butterworth-Heinemann, Stoneham, MA, 1990.
+
+Fujioka, Y., Takeuchi, K., Shindo, Y., and Komiyama, H. "Shrinkage of Liquid CO2
+         Droplets in Water". International Journal of Energy Research, 18: 765-769,
+         1994.
+
+Fujioka, Y., Takeuchi, K., Ozaki, M., Shindo, Y., and Komiyama, H. "Stability of Liquid
+         CO2 in Seawater At High Pressures". International Journal of Energy Research,
+         19: 659-664, 1995.
+
+                                                                                                                                84
+Golomb, D., Herzog, H., and Edmond, J. "Ocean Disposal". DOE/ER-30194 A
+Reasearch
+
+         Needs Assesment for The Capture of Cabon Dioxide From Fossil Fuel-Fired
+         Power Plants, 2: 2-1-2-32, 1994.
+
+Govier, G.W. and Aziz, K. "The Flow of Multiphase Mixtures in Pipes." Van Nostrand
+         Reinhold Company, New York, NY, 1972.
+
+Haugan P.M. and Drange, H. "Sequestration of CO2 in the Deep Ocean by Shallow
+         Injection". Nature, 357: 318-320, 1992.
+
+Hayduk, W. and Luadie, H. "Prediction of Diffusion Coefficients for Nonelectrolytes in
+         Dilute Aqueous Solutions". A.I.Ch.E Journal, 20(3): 611-615, 1974.
+
+Hirai, S., Okazaki, K., Araki, N., Yazawa, H., Ito, H. and Hijikata, K. "Transport
+         Phenomena of Liquid CO2 in Pressurized Water Flow With Clathrate-Hydrate at
+         the Interface". Energy Conserv. Mgmt., 37(6-8): 1073-1078, 1996.
+
+Hirai, S., Tabe, Y., Tanaka, G., and Okazaki, K. "Advanced CO2 Sequestration in
+         Intermediate Depth of Ocean." Proceedings 5th ASME/JSME Thermal
+         Engineering Joint Conference, San Diego, 1999.
+
+Kajishima, T and Saito, T. "Numerical Simulation of Unsteady Flow in Air-Lift Pump".
+         JSME International Journal, Series B, 39(3): 525-532, 1996.
+
+Liro, C.R., Adams, E.E., and Herzog, H.J. "Modeling the Release of CO2 in the Deep
+         Ocean". Energy Conserv. Mgmt., 33(5-8): 667-674, 1992.
+
+Morgan, P. "SEAWATER: A Library of MATLAB Computational Routines for the
+         Properties of Seawater". CSIRO Marine Laboratories Report 222, 1994.
+
+                                                                                                                                85
+Mori, Y.H. and Mochizuki, Y. "Dissolution of Liquid CO2 intoWater at High Pressures:
+         A Search for the Mechanism of Dissolution Being Retarded Through Hydrate-
+         Film Formation". Energy Conserv. Mgmt., 39(7): 567-578, 1998.
+
+Ohmura, R. and Mori, Y. "Critical Conditions for CO2 Hydrate Films to Rest on
+         Submarine CO2 Pond Surfaces: A Mechanistic Study". Environ. Sci. Technol.,
+         32: 1120-1127, 1998.
+
+Ohmura, R. and Mori, Y. "Comments on Solubility of Liquid CO2 in Synthetic Sea
+         Water at Temperatures from 278 K to 293 K and Pressures from 6.44 MPa to
+         29.49 MPa, and Densities of the Corresponding Aqueous Solutions". J. Chem.
+         Eng. Data, 44: 1432-1433, 1999.
+
+Saito T., Kajishima T., Nagaosa R., Kitamura, M., and Matsui, G. "Bubble Dynamics
+         and Void Fraction of Gas-Liquid 2-Phase Flow with Mass Transfer in a Vertical
+         Pipe". ASME Fluids Engineering Division Summer Meeting, 1997.
+
+Saito, T., Kajishima, T., Tsuchiya, K., and Kosugi, S. "Mass Transfer and Structure of
+         Bubbly Flows in a System of CO2 Disposal into the Ocean by a Gas-Lift
+         Column". Chemical Engineering Science, 54: 4945-4951, 1999.
+
+Saito T., Kajishima T., and Nagaosa R. "CO2 Sequestration at Sea by Gas-Lift System
+         of Shallow Injection and Deep Releasing". Environ. Sci. Technol., 34: 4140-
+         4145, 2000.
+
+Saito, T., Kosugi, S., Kajishima, T., and Tsuchiya, K. "Characteristics and
+         Performance of a Deep-Ocean Disposal System for Low-Purity CO2 via Gas-Lift
+         Effect". Energy and Fuels, 15: 285-292, 2001.
+
+                                                                                                                                86
+Sloan, Dendy. "Clathrate Hydrates of Natural Gases." Marcel Dekker, New York,
+         NY, 1998.
+
+Takemura, F. and Matsumoto, Y. "Dissolution Rate of Spherical Carbon Dioxide
+         Bubbles in Strong Alkaline Solutions". Chemical Engineering Science, 55:
+         3907-3917, 2000.
+
+Takemura, F. and Yabe, A. "Rising Speed and Dissolution Rate of a Carbon Dioxide
+         Bubble In Slightly Contaminated Water". J. Fluid Mech., 378: 319-334, 1999.
+
+Teng, H.and Yamasaki, A. "Solubility of Liquid CO2 in Synthetic Seawater at
+         Temperatures from 278 K to 293 K and Pressures from 6.44 MPa to 29.49 MPa,
+         and Densities of the Corresponding Aqueous Solutions". J. Chem. Eng. Data, 43:
+         2-5, 1998.
+
+Tsuchiya, K., Mikasa, H., and Saito, T. "Adsorption Dynamics of CO2 Bubbles in a
+         Pressurized Liquid Flowing Downward and its Simulation in Seawater".
+         Chemical Engineering Science, 52(21-22): 4119-4126, 1997.
+
+Wilke, C.R. and Change, P. "Correlations of Diffusion Coefficients in Dilute Solutions".
+         A.I.Ch.E Journal, 1(2): 264-270, 1955.
+
+Wolsky, A., Daniels, E., and Bassam, J. "CO2 Capture From Conventional Air-Based
+         Fossil Fuel-Fired Power Plants". DOE/ER-30194 A Reasearch Needs Assesment
+         for The Capture of Cabon Dioxide From Fossil Fuel-Fired Power Plants, 2: 5-1-
+         5-33, 1994.
+
+                                                                                                                                87
+88
+Appendix A
+
+A. MATLAB Code
+
+%This code simulates bubble rise and dissolution of a carbon dioxide and nitrogen gas
+%mixture bubble. It requires a user specified bubble diameter, concentration and
+%injection depth It utilizes the SEAWATER algorithms to calculate seawater properties
+%and the Peng Robinson equation of state to determine gas properties.
+%Author: Erica Clower
+%Stanford University
+%August 2002
+
+clear all variable
+clear
+
+%Define Constants
+R=83.1451;
+Tc=[304.2 126.2];
+Pc=[72.8 33.5];
+deltat = 2;
+
+%Initial Conditions
+lat = 36.75;
+D = input('What is initial injection depth?(m)');
+CO2Z = input('What is initial concentration of CO2?');
+N2Z = 1-CO2Z;
+bd = input('What is initial bubble diameter?(cm)');
+bd = bd/100;
+
+                                                                                                                                89
+U0 = 0;
+
+%The main program runs until the concentration of CO2 in the bubble has fallen below a
+%control concentration or the bubble reaches the ocean surface
+z=[CO2Z N2Z];
+n=1;
+depthnpo = D;
+bdnpo = bd;
+CO2MassOrig = 0;
+CO2MassNew = 0;
+
+while (depthnpo>0 & bdnpo>0)
+         time(n) = n * deltat - deltat;
+         test = 10;
+         %Sets bubble diameter, depth, rise velocity, and concentration and current time,
+         %to previously calculated n plus one value
+         if(n>1)
+                  bd(n) = bdnpo;
+                  Depth(n) = depthnpo;
+                  CO2Z(n) = znpo(1);
+                  U(n) = Unpo;
+                  z = znpo;
+                  Unpo = U(n);
+         end
+         if(n==1)
+                  bd(n) = bd;
+                  Depth(n) = D;
+                  CO2Z(n) = CO2Z;
+                  U(n) = U0;
+                  Unpo = U(n) + 0.05;
+
+                                                                                                                                90
+end
+
+z2=[1 0];
+
+%First Determine seawater conditions at current depth
+P = Find_P(Depth(n),lat);
+T = Find_T(Depth(n));
+rowsea(n) = Find_Rowsea(P,T);
+
+%Determine gas mixture conditions at current depth and composition using Peng-
+%Robinson equation of state
+[x,y,L(n),LiqVol,VapVol,Zv(n),Zl(n)]=flashb(3,z,T,P);
+rowbub(n) = Find_Rowbub(x,y,L(n),Zv(n),Zl(n),T,P);
+xgs = Calc_Sol(P);
+
+%Numerically solve rise velocity equation
+psi = rowsea(n)/(rowbub(n) + 0.5*rowsea(n));
+gamma = rowbub(n)/rowsea(n);
+vissea = Find_Vissea(T);
+
+%This loop iteratively solves for the new velocity. It starts with an initial guess
+%of unpo then it calculates the Reynolds number and solves the equation using
+%that Re. It then checks the two Reynolds numbers together
+k=1;
+while(test > 1)
+
+         %Guess New Velocity
+         UnpoGuess = Unpo;
+
+         %Determine Reynolds number and drag coefficient using guessed
+         %velocity
+
+                                                                                                                     91
+         ReGuess = (UnpoGuess*bd(n)*rowsea(n))/(vissea/1000);
+         Cd = (24/ReGuess)*(1 + 0.173*ReGuess^0.657) + 0.413/(1 +
+         16300*ReGuess^-1.09);
+
+         %Solve for velocity equation using guessed Drag Coefficient
+         a = deltat * ((3/4)*psi*(Cd/bd(n)));
+         b = 1;
+         c = -U(n) - deltat*((psi*(1-gamma)*9.81));
+
+         p = [a b c];
+         r = roots(p);
+         len = length(r);
+         for(i=1:len)
+
+                  if(r(i)>0)
+                           Unpo = r(i);
+
+                  end
+         end
+
+         %Find Reynold's Number using calculated velocity
+         ReCalc(n) = (Unpo*bd(n)*rowsea(n))/(vissea/1000);
+
+         %Check if Guessed and Calculated Yield Same Reynold #
+         test = ReGuess - ReCalc(n);
+         k=k+1
+
+end
+
+%Determine new depth;
+depthnpo = Depth(n) - Unpo*deltat;
+
+                                                                                                                     92
+         %Determine Mass Transfer Out of Bubble
+         [znpo,massnpo,CO2MassOrig,CO2MassNew(n),MolsLost(n)] =
+         Calc_CO2Zb(rowbub(n),z,CO2Z(n),bd(n),deltat,rowsea(n),xgs,n,CO2MassOrig,D
+         epth(n),T,vissea,ReCalc(n),Unpo);
+         MassLost(n) = (CO2MassOrig-CO2MassNew(n));
+
+         %Determine New Bubble Properties and Diameter
+         bdnpo = Find_NewBubDiameter(depthnpo,lat,znpo,massnpo);
+
+         %Find Carbon Dioxide Density
+         %First perform flash to determine density of CO2 at currrent depth conditions
+         [x2,y2,L2(n),LiqVol2,VapVol2,Zv2,Zl2]=flashb(3,z2,T,P);
+         %Next calculate density from the flash results
+         rowCO2(n) = Find_Rowbub(x2,y2,L2(n),Zv2,Zl2,T,P);
+
+         if(n==1)
+                  PerCO2Lost(n) = 0;
+
+         else
+                  PerCO2Lost(n) = ((MassLost(n))/CO2MassOrig) * 100;
+
+         end
+
+         %Increment time step
+         n = n+1;
+end
+
+output = [time' Depth' bd' rowsea' rowbub' rowCO2' CO2Z' MassLost' PerCO2Lost'];
+save output.dat output -ascii;
+
+subplot(3,2,1)
+plot(time,Depth)
+
+                                                                                                                                93
+xlabel('Time(sec)')
+ylabel('Depth(m)')
+title('Depth of Bubble with Time')
+subplot(3,2,3)
+plot(Depth,bd)
+xlabel('Depth(m)')
+ylabel('Bubble Diameter(m)')
+title('Bubble Diameter with Depth')
+subplot(3,2,2)
+plot(Depth,CO2Z)
+xlabel('Depth(m)')
+ylabel('Fraction CO2')
+title('Bubble Carbon Dioxide Content')
+subplot(3,2,4)
+plot(Depth, rowbub, Depth, rowsea, Depth, rowCO2)
+legend('rowbub','rowsea','rowCO2')
+title('Densities')
+xlabel('Depth(m)')
+ylabel('Density (kg/cu m)')
+subplot(3,2,5)
+plot(Depth,PerCO2Lost)
+xlabel('Depth(m)')
+ylabel('Percent')
+title('Percent CO2 Dissolved');
+subplot(3,2,6)
+plot(Depth,MassLost)
+title('Mass of CO2 Dissolved');
+xlabel('Depth(m)')
+ylabel('Mass of CO2 Dissolved (kg)');
+
+                                                                                                                                94
+95
+
