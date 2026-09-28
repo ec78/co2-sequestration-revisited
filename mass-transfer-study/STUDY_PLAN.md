@@ -383,5 +383,17 @@ accepted limit, not a to-do); the non-hydrate liquid-CO2 bucket (Hirai
 assess; a fully rigorous Clift-Grace-Weber treatment (this phase used the
 simpler, well-verified Mendelson/Davies-Taylor forms rather than the full
 shape-regime machinery); Cho & Choi's low-Re/Pe regime, still unresolved
-by any theory in this study. Any of these would be a reasonable next
-increment if this study is picked up again.
+by any theory in this study.
+
+**Next planned (agreed, not yet started) — the hydrate-coated residual
+deep-dive.** Of the items above, this is the one actually queued next
+(see [PROJECT_THESIS.md](../PROJECT_THESIS.md) §6.3 for the full framing,
+including the parallel thread of feeding the shape-regime finding back
+into the main thesis model instead/first). Working hypothesis: hydrate
+film thickness/growth depends on flow conditions (Hirai et al. 1996's own
+data already hints at this — `analysis/phase_d_findings.md`), which the
+current constant-rate `hydrate_shell.py` treatment doesn't capture.
+Flagged honestly as *harder* than the shape-regime work that just paid
+off — the literature for hydrate-film growth kinetics is less
+standardized, so this may cost more effort for a smaller or messier
+result, not a guaranteed repeat of Phase F's success.

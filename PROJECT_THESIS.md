@@ -400,85 +400,115 @@ it waits for Phase 3/4 substance to exist first.
 
 ## 6. Status
 
-**Phases 0 through 5 are all done.** The revised document —
-[report/revised_report.md](report/revised_report.md) — is the
-project's primary deliverable at this point: it synthesizes the Phase 1
-literature findings, the Phase 3 model work, and the Phase 4 economic
-analysis into the document outlined in §5a. Supporting detail lives in
-[LITERATURE_UPDATE.md](LITERATURE_UPDATE.md),
-[model/EQUATIONS_SPEC.md](model/EQUATIONS_SPEC.md), and the `analysis/`
-directory, all cited from the report rather than duplicated into it.
+*(Reorganized as a current-state summary for session handoff, not a
+chronological log — that's what git history is for. If you're picking
+this project up fresh, read this section, then the specific spec/analysis
+file for whatever you're about to touch, per the pointers below.)*
 
-One minor Phase 3 placeholder remains (the hydrate window's
-depth/composition threshold is a documented approximation, not a
-digitized phase diagram), noted in the report itself, not blocking.
+### 6.1 Thesis revisit — complete
 
-**Phase 6 (repo polish)** remains unstarted — optional, low priority per
-its own description.
+All six phases done. Primary deliverable:
+[report/revised_report.md](report/revised_report.md), which synthesizes
+everything below rather than duplicating it.
 
-**A new, standalone effort has since started**: a mechanistic
-reconciliation study of the mass-transfer-coefficient discrepancy that
-this project's own Phase 1 confirmed is still unresolved in the current
-literature (the "Tier 2" option from post-Phase-5 discussion of where
-this project could make a more current contribution). It lives in
-[mass-transfer-study/](mass-transfer-study/), scoped as its own living
-plan in
-[mass-transfer-study/STUDY_PLAN.md](mass-transfer-study/STUDY_PLAN.md) —
-deliberately kept separate from this roadmap since it's a new research
-question, not a further revision of the 2002 report.
+- **Phase 1 (literature)**: London Protocol has banned water-column CO2
+  disposal since Feb 2007; field trials (Hawaii/Norway) and P-GLAD-
+  specific research both wound down by ~2005; geological CCS is now
+  cheaper in real terms than any 2002 comparator. Detail:
+  [LITERATURE_UPDATE.md](LITERATURE_UPDATE.md).
+- **Phase 2 (framing)**: settled as a moderate reframe (§4.1, §5a above)
+  — keep the physics, rewrite why the application doesn't hold up.
+- **Phase 3 (single-bubble model)**: Python reimplementation in
+  `model/co2n2_bubble/` (spec: `model/EQUATIONS_SPEC.md`). Fixed a real
+  EOS phase-selection bug; implemented hydrate-coated bubble physics
+  ("Method H"); implemented Duan & Sun (2003) solubility, replacing an
+  approximate placeholder; confirmed the original's own Method A > Method
+  B dissolution-speed finding. Detail: `analysis/PHASE3_NOTES.md`,
+  `analysis/method_a_vs_b.md`.
+- **Phase 4 (economics)**: inflation-adjusted 2002 figures vs. current,
+  segment-sourced CCS costs. Key finding: modern full-chain CCS
+  (~$70–160/ton) is substantially cheaper than the 2002 liquid-CO2 route
+  in real terms (~$232/ton), mainly because capture costs fell, not
+  because ocean-disposal engineering caught up. Detail:
+  `analysis/economic_reanalysis.md`.
+- **Phase 5 (writing)**: `report/revised_report.md` written, all claims
+  traced to source files rather than asserted fresh.
+- **Post-Phase-5 open items — all resolved**:
+  - *P-GLAD reimplementation* (`model/pglad/`, spec: `PGLAD_SPEC.md`):
+    Beggs & Brill (1973) substituted for the original's inaccessible
+    chart-based friction correlation. **Honest result: does not
+    reproduce the original's own worked example** (362.3 kg/s) — a
+    corroborated finding (the original's own Table 5-1 implies missing
+    water-entrainment physics its stated equations don't specify), not a
+    bug to chase further.
+  - *Hydrate-window refinement* (`model/co2n2_bubble/hydrate_boundary.py`):
+    replaced a flat depth/composition box with a fugacity-threshold
+    criterion calibrated against two sourced CO2 hydrate quadruple
+    points. One open calibration question against real CO2/N2 mixture
+    data, reported not hidden. Detail:
+    `analysis/hydrate_boundary_refinement.md`.
+  - *Report sync*: `revised_report.md` updated to match both of the above
+    plus the mass-transfer study (§6.2) — it had drifted out of date
+    before this sync.
+- **Phase 6 (repo polish)**: still not started, still optional/low
+  priority.
 
-**Status: complete (all six phases).** Headline result — raw literature
-scatter for CO2-seawater mass transfer is actually wider than the 2002
-thesis's own "2–3 orders of magnitude" description once properly counted
-(~6 orders), but most of that collapses once correctly classified by
-physical regime: non-hydrate gas bubbles narrow to under one order of
-magnitude, with mobile-sphere (not rigid-sphere) theory closing most of
-the remaining gap for the one clean test case available. Hydrate-coated
-measurements retain a real, unresolved residual. Reported as a partial,
-not complete, reconciliation. Full capstone summary:
-[mass-transfer-study/analysis/findings.md](mass-transfer-study/analysis/findings.md).
+### 6.2 Mass-transfer-coefficient study — complete through its shape-regime follow-up
 
-**P-GLAD reimplementation: done** — `model/pglad/` (own spec:
-`model/pglad/PGLAD_SPEC.md`). Beggs & Brill (1973) substituted for the
-original's chart-based Govier & Aziz (1972) friction correlation (same
-modernization pattern as Duan & Sun replacing Weiss for the single-bubble
-model), and a shooting-method solver reimplementing the original's own
-stated method. **Honest result: does not reproduce the original's worked
-example** (362.3 kg/s water flow rate) — the pressure mismatch is a
-roughly flat ~3.5–4.6 bar (~4%) across a wide range of water flow rates,
-not something a better root search would close. Independently
-corroborated: the original's own Table 5-1 shows liquid flow increasing
-~20% along the upriser in a way its stated equations can't explain,
-implying Saito et al.'s actual model has water-entrainment/dissolution
-coupling the 2002 thesis's simplified presentation doesn't specify. Full
-account in `model/pglad/PGLAD_SPEC.md` §5.
+Standalone effort, not a further revision of the 2002 report — lives in
+[mass-transfer-study/](mass-transfer-study/) with its own living plan,
+[mass-transfer-study/STUDY_PLAN.md](mass-transfer-study/STUDY_PLAN.md).
+Capstone summary: `mass-transfer-study/analysis/findings.md`.
 
-**Hydrate-window refinement: done** —
-`model/co2n2_bubble/hydrate_boundary.py`. Replaced the flat depth/
-composition box with a composition-continuous, fugacity-threshold
-criterion (hydrate forms when the mixture's CO2 fugacity meets pure
-CO2's fugacity at its own equilibrium boundary, at the same
-temperature), calibrated against two independently-sourced and
-cross-checked CO2 hydrate quadruple points. Changes behavior at exactly
-one point in the original scenario matrix (500 m/50% CO2, now correctly
-excluded from the hydrate window) with no practical effect on that run's
-outcome; the pure-CO2 hydrate-compensated demo shifts modestly (62.4% →
-61.5% dissolved). Honest open item carried forward: the mixture
-extension isn't independently validated against real CO2/N2 hydrate
-data, and shows a real, reported discrepancy against the original
-thesis's own qualitative statement about pure CO2 at 500 m depth. Full
-account: `analysis/hydrate_boundary_refinement.md`.
+Core finding: raw literature scatter for CO2-seawater mass transfer is
+actually ~6 orders of magnitude (wider than the 2002 thesis's own "2–3
+orders" description), but classifying correctly by physical regime
+resolves most of it for gas bubbles specifically. The strongest result:
+once bubble *shape* (ellipsoidal/spherical-cap, not just surface
+mobility) is modeled correctly — `mass-transfer-study/model/deformed_bubble.py`,
+Mendelson 1967 / Davies & Taylor 1950, both independently verified before
+use — a real reported coefficient (Saito et al. 2000) matches to within
+1% at a physically plausible bubble size, with no fitting. Hydrate-coated
+measurements retain a real, unresolved ~2.9-order-of-magnitude residual;
+Cho & Choi's micro-bubble regime remains outside where any theory in this
+study gives dependable answers. Reported throughout as a **partial**
+reconciliation, not a solved problem.
 
-**Report sync: done.** `report/revised_report.md` had drifted out of
-date after the above work — it still said P-GLAD "was not rebuilt for
-this revision" and made no mention of the mass-transfer study. Updated:
-Section 4.1 now describes the P-GLAD reimplementation and its honest
-non-match finding; Section 4.2's hydrate-window paragraph now describes
-the fugacity-threshold boundary instead of the old flat box; the
-mass-transfer study is now cited from the front matter, the Conclusion,
-and the Appendix. All new links checked against the actual files.
+### 6.3 Next planned work (agreed, not yet started)
 
-Other options discussed but not started: deeper treatment of any single
-report section (geological CCS or mCDR in real depth), a different
-deliverable format for the report (PDF/LaTeX, given the original was
-submitted as one).
+Two threads the user has asked to pursue next, in this order of
+likely difficulty (easiest/most scoped first):
+
+1. **Feed the shape-regime finding back into the main thesis model.**
+   `model/co2n2_bubble/mass_transfer.py`'s Method A assumes rigid-sphere
+   behavior at the same ~1 cm bubble sizes this project's own
+   `mass-transfer-study/model/deformed_bubble.py` just showed sit in the
+   shape-deformed regime (Eo > 0.5). This is a **consistency/integration
+   task** — apply the already-built, already-verified deformed-bubble
+   theory to the main model rather than researching something new. Likely
+   touches `model/co2n2_bubble/mass_transfer.py` and `bubble_model.py`,
+   and should update `EQUATIONS_SPEC.md` and the relevant `analysis/`
+   files (and possibly `report/revised_report.md` again) to match.
+2. **Hydrate-coated residual deep-dive.** The larger of the two remaining
+   reconciliation gaps (~2.9 orders of magnitude, vs. Cho & Choi's single
+   stress case). Working hypothesis, not yet tested: hydrate *film
+   thickness/growth* depends on flow conditions (Hirai et al. 1996's own
+   data hints at this — see `mass-transfer-study/analysis/phase_d_findings.md`),
+   which the current constant-rate model doesn't capture. **This is
+   genuinely new research, not integration** — flagged as such because
+   the literature for hydrate-film growth kinetics is less standardized
+   than the bubble-shape correlations that just worked out well, so
+   there's a real chance this costs more effort for a smaller or messier
+   payoff. Would extend `mass-transfer-study/model/hydrate_shell.py` and
+   its own `STUDY_PLAN.md`.
+
+### 6.4 Other options discussed but not queued
+
+Lower priority or explicitly deferred: deeper treatment of geological
+CCS or mCDR in the report's Section 7; a PDF/LaTeX version of the report
+(the original was submitted as one); the non-hydrate liquid-CO2 bucket
+(Hirai 1996's own values — too little consistent data to assess); a full
+Clift-Grace-Weber shape-regime treatment (the simpler, verified Mendelson/
+Davies-Taylor forms were used instead); primary full-text verification of
+several 1990s sources (no journal access — a hard, accepted limit, not a
+to-do).

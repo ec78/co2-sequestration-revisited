@@ -78,7 +78,7 @@ to work with the document for now.
   `LITERATURE_UPDATE.md` — update those in place rather than scattering
   status across new files.
 
-## Repo layout (as of Phase 5)
+## Repo layout
 
 - `original/` — the source PDF, a full text extraction of it, and the
   original MATLAB driver script from Appendix A, transcribed verbatim.
@@ -103,9 +103,12 @@ to work with the document for now.
   note, equations spec, or analysis file) and then update the report's
   reference to it, not the other way around.
 - `mass-transfer-study/` — a separate, standalone research effort (not a
-  further revision of the 2002 report), complete as of its own Phase F:
-  a literature reconciliation of the mass-transfer-coefficient
-  discrepancy this project's own literature search found still-unresolved.
-  Own living plan and status: `mass-transfer-study/STUDY_PLAN.md`;
-  capstone result: `mass-transfer-study/analysis/findings.md`. Same
+  further revision of the 2002 report): a literature reconciliation of
+  the mass-transfer-coefficient discrepancy this project's own literature
+  search found still-unresolved. Complete through its shape-regime
+  follow-up (`model/deformed_bubble.py` — ellipsoidal/spherical-cap
+  bubble theory, its strongest result). Own living plan and status:
+  `mass-transfer-study/STUDY_PLAN.md`; capstone result:
+  `mass-transfer-study/analysis/findings.md`. Two further increments are
+  planned but not started — see `PROJECT_THESIS.md` §6.3. Same
   no-new-data constraint applies here as everywhere else in this repo.
