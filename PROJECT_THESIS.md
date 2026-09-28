@@ -469,6 +469,15 @@ data, and shows a real, reported discrepancy against the original
 thesis's own qualitative statement about pure CO2 at 500 m depth. Full
 account: `analysis/hydrate_boundary_refinement.md`.
 
+**Report sync: done.** `report/revised_report.md` had drifted out of
+date after the above work — it still said P-GLAD "was not rebuilt for
+this revision" and made no mention of the mass-transfer study. Updated:
+Section 4.1 now describes the P-GLAD reimplementation and its honest
+non-match finding; Section 4.2's hydrate-window paragraph now describes
+the fugacity-threshold boundary instead of the old flat box; the
+mass-transfer study is now cited from the front matter, the Conclusion,
+and the Appendix. All new links checked against the actual files.
+
 Other options discussed but not started: deeper treatment of any single
 report section (geological CCS or mCDR in real depth), a different
 deliverable format for the report (PDF/LaTeX, given the original was

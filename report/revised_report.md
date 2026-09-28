@@ -33,7 +33,14 @@ engineering could have closed the gap (Section 6). What survives from the
 original work is the technical core: a bubble transport and dissolution
 model whose central open question — reliable mass-transfer coefficients
 for CO2 dissolving into seawater — is, remarkably, still open in the
-literature today (Sections 2 and 4).
+literature today (Sections 2 and 4). That question turned out to be
+worth pursuing on its own terms: a companion study
+(`mass-transfer-study/`, not a further revision of the 2002 report but a
+standalone effort this revisit's own literature review led to) finds
+that much of the apparent disagreement in reported coefficients is
+explained by bubble surface-mobility physics, with a real, unresolved
+residual specifically in the hydrate-coated case — see its own capstone
+summary, [mass-transfer-study/analysis/findings.md](../mass-transfer-study/analysis/findings.md).
 
 ## 1. Introduction
 
@@ -196,28 +203,66 @@ underlying physics was sound.
 
 ## 4. Governing Physics: P-GLAD Model and Single-Bubble Release
 
-*(Original Chapters 3 and 4. The P-GLAD gas-lift model is carried forward
-essentially as in the original — it was not rebuilt for this revision, as
-the single-bubble model is this report's actual technical contribution.
-The single-bubble model was fully re-derived and reimplemented; see
-[model/EQUATIONS_SPEC.md](../model/EQUATIONS_SPEC.md) for the complete,
-line-by-line account of what follows.)*
+*(Original Chapters 3 and 4. Both models have now been re-derived and
+reimplemented independent of the original MATLAB source — the P-GLAD
+gas-lift hydraulics in a later pass than the single-bubble model, with a
+materially different outcome. See
+[model/EQUATIONS_SPEC.md](../model/EQUATIONS_SPEC.md) for the
+single-bubble model's complete line-by-line account, and
+[model/pglad/PGLAD_SPEC.md](../model/pglad/PGLAD_SPEC.md) for P-GLAD's.)*
 
-### 4.1 P-GLAD model (unchanged from original)
+### 4.1 P-GLAD model (reimplemented; does not reproduce the original's own numbers)
 
 The P-GLAD system (Saito et al., 2000) is a gas-lift J-tube: low-purity
-CO2 is injected at shallow depth (~300 m), rises through an upriser pipe
-via gas-lift transport while dissolving into the surrounding seawater,
-and the resulting CO2-rich seawater is carried down a separate downriser
-to deep, stable storage — combining shallow-water injection convenience
-with deep-water disposal security, without a separation step. Its
-governing equations are standard two-phase pipe-flow conservation of
-mass, momentum, and gas dissolution (Saito et al., 2000; Chen, 2001;
-Govier & Aziz, 1972), solved by dividing the pipe into short sections and
-iterating for the fluid velocity that satisfies hydrostatic boundary
-conditions at both ends. This revision did not re-derive or reimplement
-P-GLAD; it is retained here as background context for the economic
-comparison in Section 6.
+CO2 is injected at the bottom of a shallow upriser (~300 m), rises via
+gas-lift transport while dissolving into the surrounding seawater, vents
+any undissolved gas at the top, and the resulting CO2-rich seawater flows
+down a separate downriser to deep disposal — combining shallow-water
+injection convenience with deep-water disposal security, without a
+separation step. There is no pump: the water flow rate is whatever the
+gas-lift effect can sustain, found by matching ambient hydrostatic
+pressure at both open ends of the system simultaneously (a two-point
+boundary-value problem, solved by a shooting method — the original's own
+stated approach).
+
+The original report's Chapter 3 gives the governing equations (two-phase
+pipe-flow conservation of mass and momentum, drift-flux relations) but,
+unlike the single-bubble model, no accompanying code — the thesis's one
+surviving appendix contains only the single-bubble driver. Reimplementing
+P-GLAD meant working from the equations alone. One piece could not be
+reused as originally specified: the two-phase friction correlation
+(Govier & Aziz, 1972) was presented in its source as a graphical
+correlation, not a closed-form equation, and that source isn't
+accessible to this revision. Beggs & Brill (1973) — a fully closed-form,
+still-standard two-phase pipe-flow correlation from the same
+petroleum-engineering tradition — was substituted, the same kind of
+modernization already used for the single-bubble model's solubility
+correlation (Section 4.2).
+
+**This reimplementation does not reproduce the original's own worked
+example.** The original gives a fully specified case (0.5 m pipe,
+200 m upriser injecting at 300 m, 900 m downriser discharging at 1000 m,
+5 kg/s gas injection) and reports a solved water flow rate of
+362.3 kg/s. This reimplementation, built strictly from the equations the
+original actually states, finds no water flow rate near that value — the
+pressure mismatch stays at a roughly constant 3.5–4.6 bar (about 4% of
+the target) across a wide range of flow rates, including at 362.3 kg/s
+itself, which is the signature of a missing term rather than a
+convergence problem. A specific, independently corroborated reason is
+available: the original's own results table shows the liquid flow rate
+increasing by about 20% between injection and the top of the upriser —
+far more than seawater's own density variation over 200 m could produce
+— implying Saito et al.'s actual model couples water flow to gas
+dissolution or entrainment along the upriser in a way the thesis's own
+equations don't specify. In other words, the original report's four-page
+presentation of P-GLAD appears to be an incomplete summary of Saito et
+al.'s actual model, not a self-contained specification of it — confirming
+this would need Saito et al.'s own paper directly, which isn't accessible
+to this revision. Full account: `model/pglad/PGLAD_SPEC.md` §5.
+
+This negative result doesn't affect Section 6's economic comparison,
+which uses P-GLAD's literature-reported cost figure rather than this
+reimplementation's own (unvalidated) hydraulics.
 
 ### 4.2 Single-bubble release model (re-derived and reimplemented)
 
@@ -261,10 +306,20 @@ bubbles. This revision implements that behavior explicitly (internally
 called "Method H"): inside a documented hydrate window, the bubble is
 held on the vapor branch of the equation of state and dissolved at
 Fujioka's reported rate rather than the ordinary mass-transfer
-correlations. The hydrate window's exact depth/composition boundary is
-an approximation (a simple threshold), standing in for a full CO2/N2
-hydrate phase diagram that could not be recovered numerically from the
-original report's own figure.
+correlations. The hydrate window's boundary is itself an approximation —
+a full CO2/N2 hydrate phase diagram could not be recovered numerically
+from the original report's own figure — but it is a physically motivated
+one, not an arbitrary cutoff: hydrate is predicted to form when the
+mixture's CO2 fugacity meets or exceeds pure CO2's fugacity at its own
+equilibrium hydrate-formation pressure at the same temperature, using a
+pure-CO2 boundary curve fit to two independently sourced and
+cross-checked reference points (the CO2 hydrate system's two quadruple
+points). This correctly captures the original's own qualitative claim
+that N2 dilution shrinks the hydrate-forming region, reached by an
+independent route rather than a digitized reproduction of the original's
+figure — though its exact calibration for CO2/N2 *mixtures* specifically
+remains unverified against real mixture data, an honestly open point
+documented in `model/co2n2_bubble/hydrate_boundary.py`.
 
 **Mass transfer.** Two independent mass-transfer approaches, both from
 the original report, are implemented: a Sherwood-number correlation
@@ -453,7 +508,11 @@ coefficient problem the original conclusion flagged as unresolved — large,
 unreconciled disagreement between reported CO2-in-seawater dissolution
 rates depending on measurement method and hydrate state — is, checked
 against the most recent literature available for this revision, still
-genuinely open.
+genuinely open in the field at large, though this revision's own
+companion study found that a real, substantial share of it — the
+non-hydrate, gas-bubble portion specifically — resolves once bubble
+surface-mobility physics is applied correctly, leaving the hydrate-coated
+case as the harder, still-unresolved residual.
 
 What did not hold up: the premise that any of this adds up to an
 implementable, economically favorable disposal method. It does not,
@@ -496,7 +555,17 @@ directly in [model/EQUATIONS_SPEC.md](../model/EQUATIONS_SPEC.md).
 
 Original MATLAB code: [original/appendix_a_original.m](../original/appendix_a_original.m)
 (transcribed verbatim, not executed — see file header for what's missing
-from the original appendix). Reimplemented Python model:
-[model/co2n2_bubble/](../model/co2n2_bubble/), runnable via
+from the original appendix; no equivalent P-GLAD code was ever published
+alongside the original). Reimplemented Python models:
+[model/co2n2_bubble/](../model/co2n2_bubble/) (single-bubble, runnable via
 [model/run_simulation.py](../model/run_simulation.py); governing equations
-and full change history in [model/EQUATIONS_SPEC.md](../model/EQUATIONS_SPEC.md).
+and full change history in [model/EQUATIONS_SPEC.md](../model/EQUATIONS_SPEC.md))
+and [model/pglad/](../model/pglad/) (gas-lift J-tube hydraulics; spec and
+honest validation result in [model/pglad/PGLAD_SPEC.md](../model/pglad/PGLAD_SPEC.md)).
+
+Companion research effort, grown out of this revisit's own literature
+review but standalone rather than a further revision of the 2002 report:
+[mass-transfer-study/](../mass-transfer-study/), reconciling the
+CO2-seawater mass-transfer-coefficient discrepancy discussed in Sections
+1, 4, and 8 — capstone summary in
+[mass-transfer-study/analysis/findings.md](../mass-transfer-study/analysis/findings.md).
