@@ -14,31 +14,36 @@ rather than repeated.
 
 Can the reported 2–6 order-of-magnitude scatter in CO2-seawater
 mass-transfer coefficients be explained by known physical regime
-differences — bubble surface mobility, hydrate coating, disperse phase,
-measurement geometry — rather than remaining an unexplained empirical
-disagreement? ([STUDY_PLAN.md](../STUDY_PLAN.md) §2)
+differences — bubble surface mobility, bubble shape, hydrate coating,
+disperse phase, measurement geometry — rather than remaining an
+unexplained empirical disagreement? ([STUDY_PLAN.md](../STUDY_PLAN.md) §2)
 
 ## Method, in brief
 
 No new experiments or measurements — this is a literature reconciliation
 built entirely from previously published data, consistent with the
 constraint that applies across this whole repository (no lab access).
-Three established, decades-old analytical theories were implemented and
+Four established, decades-old analytical theories were implemented and
 tested against a compiled literature dataset:
 
 - **Rigid/contaminated bubble surface** (boundary-layer theory, `Sh ~
   Re^0.5 Sc^(1/3)`) — [model/rigid_sphere.py](../model/rigid_sphere.py)
-- **Mobile/clean bubble surface** (Levich's penetration theory, `Sh ~
-  Re^0.5 Sc^(1/2)`, a genuinely different scaling and a higher
+- **Mobile/clean spherical bubble surface** (Levich's penetration theory,
+  `Sh ~ Re^0.5 Sc^(1/2)`, a genuinely different scaling and a higher
   prediction at the same Re) — [model/mobile_sphere.py](../model/mobile_sphere.py)
+- **Deformed bubbles** (ellipsoidal — Mendelson 1967 wave-analogy
+  velocity; spherical-cap — Davies & Taylor 1950), dispatched by Eötvös
+  number, for the bubble sizes where a spherical-bubble assumption has no
+  physical basis at all — [model/deformed_bubble.py](../model/deformed_bubble.py)
 - **Hydrate-coated shell** (diffusion-limited, expected roughly
   independent of Reynolds number) —
   [model/hydrate_shell.py](../model/hydrate_shell.py), harmonizing units
   across sources rather than adding a new correlation
 
-None of these three forms were fit to this study's own data — they're
+None of these four forms were fit to this study's own data — they're
 independently established results (Levich 1962; Frössling 1938; Higbie
-1935), still cited as standard in current review literature.
+1935; Mendelson 1967; Davies & Taylor 1950), still cited as standard in
+current review literature.
 
 ## What the dataset actually contains (Phase A)
 
@@ -84,12 +89,23 @@ full table):
 
 - **Non-hydrate gas bubbles** (the only bucket with unambiguous units and
   physical comparability): **3.6×10⁻⁵ to 2.0×10⁻⁴ m/s — under one order
-  of magnitude.** Within this bucket, mobile-sphere theory closes a 3–6×
-  gap that rigid-sphere theory left open for the one clean test case
-  (Saito et al. 2000), landing within 8–32% using a deliberately
-  conservative velocity estimate
+  of magnitude.** Within this bucket, rigid-sphere theory left Saito et
+  al. (2000)'s reported value 3–6× too low, and an idealized clean-
+  spherical-bubble theory gave unphysical results entirely — because
+  Saito's plausible bubble sizes (2–30 mm) turn out to sit in the
+  shape-*deformed* regime, not the spherical regime either theory
+  assumes. Once shape is modeled correctly (ellipsoidal/spherical-cap
+  theory, not just interface mobility), the match becomes tight: **at a
+  physically plausible 10 mm bubble size, the prediction matches Saito's
+  reported value to within 1%**, and the full plausible size range
+  brackets it within roughly a factor of 2 either way — using no fitting
+  to this study's own data
   ([phase_b_findings.md](phase_b_findings.md),
-  [phase_c_findings.md](phase_c_findings.md)).
+  [phase_c_findings.md](phase_c_findings.md),
+  [phase_f_deformed_bubble.md](phase_f_deformed_bubble.md)). The
+  practical lesson: at this bubble scale, bubble *shape* is the dominant
+  physical factor, not surface contamination state — both deformed
+  regimes circulate strongly regardless of surface mobility.
 - **Hydrate-coated** (mostly liquid CO2): **1.9×10⁻⁶ to 1.5×10⁻³ kg/m²/s
   — a real, unresolved ~2.9-order-of-magnitude residual**, correctly
   separated from the non-hydrate bucket by hydrate state but not
@@ -108,15 +124,20 @@ full table):
 
 ## Answer to the central question
 
-**Partially yes.** Most of the apparent disagreement in the
-non-hydrate-gas-bubble literature dissolves once the data is classified
-correctly and the right theory (mobile, not rigid, surface behavior) is
-applied — a specific, falsifiable prediction that held up for the one
-case with a clean test. The hydrate-coated literature retains genuine,
-unresolved scatter this study narrows but does not close, most plausibly
-tied to uncontrolled hydrate-film properties across different
-experiments. And there's a Reynolds/Péclet regime (very small bubbles)
-where neither available theory gives dependable answers at all.
+**Largely yes for gas bubbles, only partially for hydrate-coated
+measurements.** The apparent disagreement in the non-hydrate-gas-bubble
+literature all but dissolves once the data is classified correctly and
+the right physics — bubble shape first, surface mobility second — is
+applied: a specific, falsifiable prediction (a plausible bubble size
+under standard deformed-bubble theory) matched a real reported value to
+within 1%, not just "closer than before." The hydrate-coated literature
+tells a different, still-open story: real, unresolved scatter that this
+study narrows (hydrate-vs-not) but does not close, most plausibly tied to
+uncontrolled hydrate-film properties across different experiments. And
+there's a Reynolds/Péclet regime (very small bubbles) where no theory
+tried in this study gives dependable answers at all. The overall answer
+is genuinely mixed by design, not softened for effect — that mix is the
+finding.
 
 That's a materially better answer than "the literature disagrees and
 nobody knows why" — which is where both the original 2002 thesis and this

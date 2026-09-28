@@ -36,11 +36,14 @@ for CO2 dissolving into seawater — is, remarkably, still open in the
 literature today (Sections 2 and 4). That question turned out to be
 worth pursuing on its own terms: a companion study
 (`mass-transfer-study/`, not a further revision of the 2002 report but a
-standalone effort this revisit's own literature review led to) finds
-that much of the apparent disagreement in reported coefficients is
-explained by bubble surface-mobility physics, with a real, unresolved
-residual specifically in the hydrate-coated case — see its own capstone
-summary, [mass-transfer-study/analysis/findings.md](../mass-transfer-study/analysis/findings.md).
+standalone effort this revisit's own literature review led to) finds that
+most of the apparent disagreement for gas bubbles resolves once bubble
+*shape* — not just surface contamination state — is modeled correctly
+(a real reported coefficient matched to within 1% at a physically
+plausible bubble size, using standard deformed-bubble theory with no
+fitting), leaving a real, unresolved residual specifically in the
+hydrate-coated case — see its own capstone summary,
+[mass-transfer-study/analysis/findings.md](../mass-transfer-study/analysis/findings.md).
 
 ## 1. Introduction
 
@@ -509,10 +512,12 @@ unreconciled disagreement between reported CO2-in-seawater dissolution
 rates depending on measurement method and hydrate state — is, checked
 against the most recent literature available for this revision, still
 genuinely open in the field at large, though this revision's own
-companion study found that a real, substantial share of it — the
-non-hydrate, gas-bubble portion specifically — resolves once bubble
-surface-mobility physics is applied correctly, leaving the hydrate-coated
-case as the harder, still-unresolved residual.
+companion study found that the non-hydrate, gas-bubble portion of it
+resolves to within about 1% once bubble *shape* — ellipsoidal or
+spherical-cap, not the idealized sphere every theory in this report
+otherwise assumes — is modeled correctly at a physically plausible bubble
+size, leaving the hydrate-coated case as the harder, still-unresolved
+residual.
 
 What did not hold up: the premise that any of this adds up to an
 implementable, economically favorable disposal method. It does not,

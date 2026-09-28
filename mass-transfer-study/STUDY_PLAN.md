@@ -351,10 +351,37 @@ treatment of Saito's regime would need ellipsoidal/spherical-cap drag and
 mass-transfer theory (Clift, Grace & Weber 1978) — a real further
 increment, now precisely scoped rather than vaguely deferred.
 
+**That precisely-scoped increment was then pursued, and it produced the
+strongest result in the whole study.** `model/deformed_bubble.py`
+implements the two regimes Saito's bubbles actually occupy — ellipsoidal
+(Mendelson, 1967) and spherical-cap (Davies & Taylor, 1950), both
+verified against sources before use — dispatched by Eötvös number rather
+than assuming a spherical bubble throughout. Result: **at 10 mm — a
+thoroughly plausible size for the small-scale visualization experiment
+Saito's coefficient came from — the predicted k_L matches the reported
+2.0×10⁻⁴ m/s to within 1%**, and across the full 2–30 mm plausible range
+the predictions bracket the reported value tightly (0.58×–2.36×),
+against 3–6× low (rigid) or unphysical (idealized spherical-mobile)
+in the earlier attempts. The terminal velocities themselves (0.21–0.29
+m/s, roughly constant across the size range) also now match the
+well-known experimental fact that mm-to-cm bubbles in water rise at a
+roughly size-independent speed — something neither earlier model got
+right either. Reading this honestly: it doesn't prove Saito's bubbles
+were exactly 10 mm, and it reveals that "mobile vs. rigid interface" was
+the wrong axis for this regime all along — shape, not surface
+contamination state, is what governs bubble dynamics once bubbles
+deform, since both ellipsoidal and cap bubbles circulate strongly
+regardless of surface state. Cho & Choi's regime is unaffected (still
+deeply spherical, Eo ~10⁻⁴, correctly falls back to the same spherical
+treatment) and remains the framework's one clear unresolved stress case.
+Full account: `analysis/phase_f_deformed_bubble.md`.
+
 **Not pursued further, and not silently dropped**: primary full-text
 verification of several 1990s sources (no journal access — a hard,
 accepted limit, not a to-do); the non-hydrate liquid-CO2 bucket (Hirai
 1996's own non-hydrate values), which never had enough consistent data to
-assess. Either of these, or the ellipsoidal/spherical-cap treatment noted
-above, would be a reasonable next increment if this study is picked up
-again.
+assess; a fully rigorous Clift-Grace-Weber treatment (this phase used the
+simpler, well-verified Mendelson/Davies-Taylor forms rather than the full
+shape-regime machinery); Cho & Choi's low-Re/Pe regime, still unresolved
+by any theory in this study. Any of these would be a reasonable next
+increment if this study is picked up again.
