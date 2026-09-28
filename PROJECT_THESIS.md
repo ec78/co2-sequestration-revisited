@@ -438,8 +438,38 @@ measurements retain a real, unresolved residual. Reported as a partial,
 not complete, reconciliation. Full capstone summary:
 [mass-transfer-study/analysis/findings.md](mass-transfer-study/analysis/findings.md).
 
+**P-GLAD reimplementation: done** — `model/pglad/` (own spec:
+`model/pglad/PGLAD_SPEC.md`). Beggs & Brill (1973) substituted for the
+original's chart-based Govier & Aziz (1972) friction correlation (same
+modernization pattern as Duan & Sun replacing Weiss for the single-bubble
+model), and a shooting-method solver reimplementing the original's own
+stated method. **Honest result: does not reproduce the original's worked
+example** (362.3 kg/s water flow rate) — the pressure mismatch is a
+roughly flat ~3.5–4.6 bar (~4%) across a wide range of water flow rates,
+not something a better root search would close. Independently
+corroborated: the original's own Table 5-1 shows liquid flow increasing
+~20% along the upriser in a way its stated equations can't explain,
+implying Saito et al.'s actual model has water-entrainment/dissolution
+coupling the 2002 thesis's simplified presentation doesn't specify. Full
+account in `model/pglad/PGLAD_SPEC.md` §5.
+
+**Hydrate-window refinement: done** —
+`model/co2n2_bubble/hydrate_boundary.py`. Replaced the flat depth/
+composition box with a composition-continuous, fugacity-threshold
+criterion (hydrate forms when the mixture's CO2 fugacity meets pure
+CO2's fugacity at its own equilibrium boundary, at the same
+temperature), calibrated against two independently-sourced and
+cross-checked CO2 hydrate quadruple points. Changes behavior at exactly
+one point in the original scenario matrix (500 m/50% CO2, now correctly
+excluded from the hydrate window) with no practical effect on that run's
+outcome; the pure-CO2 hydrate-compensated demo shifts modestly (62.4% →
+61.5% dissolved). Honest open item carried forward: the mixture
+extension isn't independently validated against real CO2/N2 hydrate
+data, and shows a real, reported discrepancy against the original
+thesis's own qualitative statement about pure CO2 at 500 m depth. Full
+account: `analysis/hydrate_boundary_refinement.md`.
+
 Other options discussed but not started: deeper treatment of any single
 report section (geological CCS or mCDR in real depth), a different
 deliverable format for the report (PDF/LaTeX, given the original was
-submitted as one), or further technical-model work (P-GLAD
-reimplementation, hydrate-window refinement).
+submitted as one).

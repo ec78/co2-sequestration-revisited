@@ -7,21 +7,27 @@ composition.
 
 import numpy as np
 
+from . import seawater, hydrate_boundary
 from .constants import MOLAR_MASS
 
 _HIRAI_FLUX_KG_M2_S = 1.25e-4  # Hirai et al. (1996), non-hydrate case
 _FUJIOKA_DDB_DT_M_S = 5.0e-7   # Fujioka et al. (1994), hydrate-coated bubble
 
-# Hydrate-window threshold. [RECONSTRUCTED, approximate placeholder] --
-# the original's Fig. 2-5 (CSMHYD-predicted CO2/N2 hydrate formation
-# pressure vs. composition/temperature) isn't numerically recoverable
-# from the PDF. See EQUATIONS_SPEC.md section 6.
-HYDRATE_MIN_DEPTH_M = 400.0
-HYDRATE_MIN_CO2_FRAC = 0.5
-
 
 def in_hydrate_window(depth_m: float, co2_frac: float) -> bool:
-    return depth_m >= HYDRATE_MIN_DEPTH_M and co2_frac >= HYDRATE_MIN_CO2_FRAC
+    """Whether hydrate is predicted to form at this depth/composition.
+
+    Uses hydrate_boundary.hydrate_forms (a composition-continuous,
+    fugacity-threshold criterion) as of this revision -- see
+    hydrate_boundary.py for the full derivation, sourcing, and honestly-
+    reported calibration limitation. Superseded the original fixed
+    depth/composition box (still available as
+    hydrate_boundary.legacy_box_hydrate_window for comparison).
+    """
+    T_K = seawater.temperature_K(depth_m)
+    P_bar = seawater.pressure_bar(depth_m)
+    y_gas = (co2_frac, 1.0 - co2_frac)
+    return hydrate_boundary.hydrate_forms(y_gas, T_K, P_bar)
 
 
 def method_b_rate(Db_m: float, x_co2: float) -> float:

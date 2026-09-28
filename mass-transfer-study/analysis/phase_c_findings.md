@@ -5,6 +5,16 @@ Per [../STUDY_PLAN.md](../STUDY_PLAN.md) §3.2/§6 Phase C. Model:
 continuation of the specific question Phase B raised — read
 [phase_b_findings.md](phase_b_findings.md) first.
 
+> **Addendum** (item 6 from the post-study open-items list, "a fully
+> self-consistent mobile-sphere drag law"): attempted and built — see
+> the end of this document. It surfaced a deeper finding than a numeric
+> refinement: Saito's own plausible bubble sizes sit entirely in the
+> shape-*deformed* regime, outside where the spherical theory this whole
+> comparison rests on applies at all. The numbers below (using a
+> conservative rigid-drag velocity stand-in) remain the reported
+> comparison as a result — read the addendum before treating this as
+> "not yet done."
+
 ## Scoping choice, stated up front
 
 This model reuses the **rigid-sphere terminal velocity** from
@@ -82,3 +92,52 @@ confirmation.
   Aya, Tabe/Hirai) will for the first time bring the **liquid-CO2**
   entries back into direct use, since hydrate-shell diffusion resistance
   doesn't care whether the core is gas or liquid.
+
+## Addendum — the fully self-consistent mobile-drag attempt
+
+The result above deliberately used a **conservative** velocity (the
+rigid-sphere terminal velocity) rather than deriving a proper
+mobile-sphere drag law, flagged at the time as a simplification worth
+revisiting. Revisited: [model/mobile_sphere.py](../model/mobile_sphere.py)
+now implements Mei, Klausner & Lawrence's (1994) closed-form clean-bubble
+drag coefficient, spanning creeping flow through high Reynolds number in
+one formula. Checked independently before trusting it (not on the
+strength of one search result): its two analytic limits reproduce two
+separately well-established results exactly — Re→0 gives Cd=16/Re, the
+classical Hadamard-Rybczynski creeping-flow gas-bubble drag (2/3 of the
+rigid-sphere Stokes value); Re→∞ gives Cd=48/Re, Moore's (1965) classical
+high-Re clean-bubble asymptote.
+
+**Applying it to Saito's conditions gives unphysical results** — rise
+velocities up to 180 m/s for a 30 mm bubble. This is not a bug: it is
+the mathematically correct consequence of a formula whose Cd → 0 as
+Re → ∞, which is the right behavior *for a bubble that stays perfectly
+spherical*, and real bubbles do not stay spherical at these sizes.
+Checking the Eötvös number (`mobile_sphere.eotvos_number`, which governs
+the transition from surface-tension-dominated spherical shape to
+inertia-dominated deformation) confirms it directly: **Saito's entire
+plausible bubble-size range (2–30 mm) has Eo from ~0.5 to over 100** —
+squarely in the shape-deformed (ellipsoidal/wobbling) regime, not the
+spherical regime either this module's or `rigid_sphere.py`'s theory
+assumes. Cho & Choi's micron-scale bubbles, by contrast, have Eo ~ 10⁻⁴
+— genuinely spherical, no such concern; re-running them with the proper
+mobile-drag velocity gives 0.16× and 0.75× ratios to the reported values
+(versus 0.19× and 0.92× with the earlier conservative estimate) — a
+modest shift, not a resolution, consistent with Cho & Choi's regime
+already being flagged as outside both theories' dependable range.
+
+**This is a genuine, useful negative result, not a failed refinement.**
+It means the rigid-vs-mobile *interface* dichotomy this whole study is
+built on (Phases B–C) is the right axis of variation for bubbles small
+enough to stay spherical, but for bubbles Saito's size, bubble *shape*
+deformation is likely at least as important a physical factor as surface
+mobility — and this study's framework doesn't model shape at all. The
+earlier conservative comparison (rigid-drag velocity, Levich k_L formula)
+remains the one reported, not because it is rigorously correct, but
+because it avoids the larger, clearer error of extrapolating an
+undeformed-sphere theory into a regime real bubbles don't occupy. A
+proper treatment of Saito's regime would need an ellipsoidal/spherical-
+cap drag and mass-transfer theory (Clift, Grace & Weber 1978's shape-
+regime framework — already cited in the original 2002 thesis's own
+bibliography) — out of scope for this pass, flagged rather than
+attempted without the same care given to everything else in this study.

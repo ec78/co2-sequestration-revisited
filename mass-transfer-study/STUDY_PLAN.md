@@ -330,11 +330,31 @@ was ever meant to apply. Reported throughout as a **partial**
 reconciliation — a materially better answer than "the literature
 disagrees and nobody knows why," not a claim of full resolution.
 
+**Fully self-consistent mobile-sphere drag law: attempted, and it
+revealed something more useful than a numeric refinement.**
+`model/mobile_sphere.py` now implements Mei, Klausner & Lawrence's (1994)
+clean-bubble drag law (verified via two independently-known analytic
+limits before use), replacing the earlier conservative rigid-drag
+stand-in. Applying it to Saito's conditions gives unphysical velocities
+(up to 180 m/s) — not a bug, but the correct consequence of a formula
+that assumes an undeformed sphere, checked directly via the Eötvös
+number: **Saito's entire plausible bubble-size range (2–30 mm) sits in
+the shape-deformed regime (Eo 0.5 to >100)**, not the spherical regime
+either this study's rigid or mobile theory assumes. Cho & Choi's
+micron-scale bubbles (Eo ~10⁻⁴) remain genuinely spherical; re-run with
+proper mobile drag, their match shifts modestly (0.16×/0.75× vs. the
+earlier 0.19×/0.92×), not resolving anything new there either. **The
+earlier conservative comparison remains the one reported** — not because
+it's rigorously correct, but because it avoids a worse, clearer error.
+Full account: `analysis/phase_c_findings.md`'s addendum. A proper
+treatment of Saito's regime would need ellipsoidal/spherical-cap drag and
+mass-transfer theory (Clift, Grace & Weber 1978) — a real further
+increment, now precisely scoped rather than vaguely deferred.
+
 **Not pursued further, and not silently dropped**: primary full-text
 verification of several 1990s sources (no journal access — a hard,
-accepted limit, not a to-do); a fully self-consistent mobile-sphere drag
-law (this study's mobile predictions deliberately use a conservative
-rigid-drag velocity instead — see `model/mobile_sphere.py`); the
-non-hydrate liquid-CO2 bucket (Hirai 1996's own non-hydrate values), which
-never had enough consistent data to assess. Any of these would be a
-reasonable next increment if this study is picked up again.
+accepted limit, not a to-do); the non-hydrate liquid-CO2 bucket (Hirai
+1996's own non-hydrate values), which never had enough consistent data to
+assess. Either of these, or the ellipsoidal/spherical-cap treatment noted
+above, would be a reasonable next increment if this study is picked up
+again.

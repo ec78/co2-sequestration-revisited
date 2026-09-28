@@ -309,16 +309,28 @@ bubble uses the ordinary stable-root EOS and Methods A/B exactly as
 before — Method H only overrides behavior *inside* the window it's meant
 for.
 
-The hydrate-window boundary itself is **[RECONSTRUCTED, approximate]**:
-the original's Fig. 2-5 (CSMHYD-predicted hydrate formation pressure vs.
-CO2/N2 composition and temperature) isn't numerically recoverable from
-the PDF (a figure, not a table), so this implementation uses a simple
-documented threshold (depth ≥ 400 m *and* CO2 mole fraction ≥ 0.5) as a
-placeholder for that phase boundary, not a digitized reproduction of it.
-Flagged clearly in code; refining this against a real CO2/N2 hydrate
-model (e.g. re-running CSMHYD-equivalent predictions, per the Phase 1
-finding that CSMGem and newer CPA-EoS models have superseded CSMHYD) is a
-further follow-up, not resolved here.
+**The hydrate-window boundary — updated, no longer the original box
+placeholder.** The original's Fig. 2-5 (CSMHYD-predicted hydrate
+formation pressure vs. CO2/N2 composition and temperature) still isn't
+numerically recoverable from the PDF (a figure, not a table), so a full
+digitized reproduction of it remains out of reach. But the first-pass
+placeholder (a fixed depth ≥ 400 m *and* CO2 mole fraction ≥ 0.5 box, no
+temperature or pressure sensitivity at all) has been replaced by a
+composition-continuous, physically-motivated criterion: hydrate forms
+when the mixture's CO2 fugacity (computed via this project's own EOS,
+eos.py — the same one already used everywhere else in this file) meets
+or exceeds pure CO2's fugacity at its own equilibrium hydrate-formation
+pressure at the same temperature. Diluting with N2 lowers CO2's fugacity
+at fixed total pressure, so a mixture needs a higher pressure or colder
+temperature than pure CO2 to cross that threshold — the same qualitative
+behavior Fig. 2-5 describes, reached by a different, independently
+sourced route (the pure-CO2 boundary curve is a two-point fit through the
+CO2 hydrate system's two quadruple points, both independently retrieved
+and cross-checked during this revision). Full derivation, sourcing, and
+an honestly-reported calibration discrepancy against the original's own
+qualitative statement about pure CO2 at 500 m: `hydrate_boundary.py`'s
+module docstring. The old box remains available as
+`hydrate_boundary.legacy_box_hydrate_window` for comparison, not deleted.
 
 ## 7. Per-step update procedure — **[ORIGINAL, algorithmic]**
 
@@ -347,9 +359,16 @@ Loop terminates when `depth <= 0` (bubble reached surface) or `Db <= 0`
   qualitative conclusions: impure bubbles accelerate while rising, pure
   bubbles decelerate, near-total dissolution above 500 m, etc.) is
   possible with what survives in the PDF.
-- The P-GLAD/J-tube model (Chapter 3) — out of scope for this pass; the
-  single-bubble model is the technical core carried forward per the Phase
-  2 outline (§5a item 4 in PROJECT_THESIS.md).
-- Hydrate-coated bubble behavior (§6 above) — scoped out for the same
-  reason P-GLAD is: not needed for the CO2/N2 mixture cases that are this
-  report's actual contribution.
+- The P-GLAD/J-tube model (Chapter 3) — reimplemented separately in
+  `pglad/` (its own spec: `pglad/PGLAD_SPEC.md`), since it's a genuinely
+  different physical system (two-phase pipe flow, not a single rising
+  bubble) from everything else in this file. Honest result: it does not
+  reproduce the original's own worked-example water flow rate (362.3
+  kg/s), with a specific, independently-corroborated reason why (the
+  original's own Table 5-1 shows liquid flow increasing ~20% along the
+  upriser in a way its stated equations don't explain — see
+  `pglad/PGLAD_SPEC.md` §5 for the full account).
+- Hydrate-coated bubble behavior — **implemented**, not scoped out (see
+  §6 above, "Method H"). This note is left here only to flag that an
+  earlier draft of this document said otherwise; §6 is the current,
+  correct account.

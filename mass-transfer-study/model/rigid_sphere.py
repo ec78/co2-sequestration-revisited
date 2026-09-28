@@ -16,6 +16,18 @@ for cases (like most of this study's literature dataset) where the
 bubble diameter actually used in a given experiment isn't known and a
 plausible-range sweep is the honest thing to compute instead of a single
 fabricated-precision point estimate.
+
+Shared limitation, discovered while building mobile_sphere.py's Mei et
+al. (1994) drag law and equally true here: this module assumes an
+undeformed sphere throughout. That assumption is fine for Cho & Choi's
+micron-scale bubbles (Eotvos number ~1e-4) but not for Saito et al.'s
+plausible bubble sizes (2-30 mm, Eo ~0.5 to >100) -- see
+mobile_sphere.py's eotvos_number() and module docstring for the full
+account. This module's Mori & Mochizuki-style Cd correlation happens to
+have physically sensible bounded high-Re behavior (Cd approaching a
+roughly constant ~0.4, in the right ballpark for real deformed bubbles)
+even though "rigid sphere" isn't the correct physical description of a
+deformed bubble either -- worth knowing, not worth over-trusting.
 """
 
 import os

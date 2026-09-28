@@ -146,10 +146,17 @@ exist).
   full-text sources (no institutional journal access) — verified at the
   abstract/bibliographic level instead, with that limit stated
   explicitly rather than glossed over.
-- The mobile-sphere comparison reused a conservative (rigid-sphere-drag)
-  velocity rather than a fully self-consistent mobile-drag model — stated
-  in `model/mobile_sphere.py` and not expected to change the qualitative
-  conclusion, but a real simplification.
+- The mobile-sphere comparison uses a conservative (rigid-sphere-drag)
+  velocity rather than a fully self-consistent mobile-drag model — tried
+  the self-consistent version directly (a proper clean-bubble drag law,
+  verified against two independently-known analytic limits) and found it
+  gives unphysical results for Saito's bubble sizes, because Saito's
+  entire plausible size range (2–30 mm) turns out to sit in the
+  shape-*deformed* regime (Eötvös number 0.5 to >100), outside where any
+  spherical-bubble theory — rigid or mobile — has a real basis. That's a
+  genuine limitation of this study's whole theoretical framework, not
+  just an unfinished refinement: see
+  [phase_c_findings.md](phase_c_findings.md)'s addendum.
 - Sample size is small in every bucket (as few as one or two points) —
   these are illustrative, falsifiable comparisons, not a statistically
   powered study.

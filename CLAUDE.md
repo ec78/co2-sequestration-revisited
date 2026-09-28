@@ -84,12 +84,16 @@ to work with the document for now.
   original MATLAB driver script from Appendix A, transcribed verbatim.
   Nothing here is executed; it's provenance/reference only (no MATLAB
   access).
-- `model/` — the Python reimplementation (`co2n2_bubble` package) and
-  `EQUATIONS_SPEC.md`, the governing-equations spec every module in the
-  package follows. Read that spec before touching the model code — it
-  tags every equation as original, reconstructed (from incomplete OCR/
-  missing appendix source), or deliberately modernized, and that framing
-  should stay in sync with the code.
+- `model/` — the Python reimplementation. Two independent subpackages,
+  each modeling a genuinely different physical system from the original
+  report: `co2n2_bubble/` (the single-bubble dissolution model, Chapter 4;
+  spec: `EQUATIONS_SPEC.md`) and `pglad/` (the gas-lift J-tube, Chapter 3;
+  spec: `pglad/PGLAD_SPEC.md` — note this one honestly does *not*
+  reproduce the original's own worked-example numbers, with a specific
+  reason why documented in that spec's §5). Read the relevant spec before
+  touching either package's code — both tag every equation as original,
+  reconstructed (from incomplete OCR/missing source), or deliberately
+  modernized, and that framing should stay in sync with the code.
 - `analysis/` — run outputs and write-ups checking model behavior against
   the 2002 report's claims (`PHASE3_NOTES.md`, `method_a_vs_b.md`) and the
   economic re-analysis (`economic_reanalysis.md`).
