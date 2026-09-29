@@ -4,7 +4,7 @@ Guidance for Claude Code (or any assistant) working in this repository.
 
 ## What this repo is
 
-A revisit of Erica Clower's August 2002 M.S. report, *"Ocean Sequestration of
+A revisit of Eric Clower's August 2002 M.S. report, *"Ocean Sequestration of
 CO2/N2 Mixtures"*, submitted to the Department of Petroleum Engineering at
 Stanford University (advisor: Dr. Franklin Orr). The original document is
 [02-thesis.pdf](02-thesis.pdf) — the only file in the repo at the outset of

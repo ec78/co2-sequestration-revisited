@@ -1,6 +1,6 @@
 # Project: Revisiting "Ocean Sequestration of CO2/N2 Mixtures" (2002)
 
-Living roadmap for updating Erica Clower's August 2002 Stanford M.S. report
+Living roadmap for updating Eric Clower's August 2002 Stanford M.S. report
 (advisor: Dr. Franklin Orr, Dept. of Petroleum Engineering). Source document:
 [02-thesis.pdf](02-thesis.pdf). Update this file as phases complete, decisions
 get made, or the plan changes — it is the single source of truth for project

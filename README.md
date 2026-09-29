@@ -1,6 +1,6 @@
 # Ocean Sequestration of CO2/N2 Mixtures, Revisited
 
-A 2026 revisit of Erica Clower's August 2002 M.S. report to Stanford's
+A 2026 revisit of Eric Clower's August 2002 M.S. report to Stanford's
 Department of Petroleum Engineering (advisor: Dr. Franklin Orr),
 [02-thesis.pdf](02-thesis.pdf) — the only file that existed here at the
 start of this project.
