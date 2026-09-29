@@ -94,6 +94,10 @@ to work with the document for now.
   touching either package's code — both tag every equation as original,
   reconstructed (from incomplete OCR/missing source), or deliberately
   modernized, and that framing should stay in sync with the code.
+  `co2n2_bubble/shape_regime.py` is where `mass-transfer-study/`'s
+  shape-deformed-bubble result was fed back into this model (see below
+  and `EQUATIONS_SPEC.md` §5b) — the two directories aren't fully
+  independent of each other despite the standalone framing.
 - `analysis/` — run outputs and write-ups checking model behavior against
   the 2002 report's claims (`PHASE3_NOTES.md`, `method_a_vs_b.md`) and the
   economic re-analysis (`economic_reanalysis.md`).
@@ -107,8 +111,12 @@ to work with the document for now.
   the mass-transfer-coefficient discrepancy this project's own literature
   search found still-unresolved. Complete through its shape-regime
   follow-up (`model/deformed_bubble.py` — ellipsoidal/spherical-cap
-  bubble theory, its strongest result). Own living plan and status:
+  bubble theory, its strongest result), which has since been fed back
+  into the main thesis model itself (`model/co2n2_bubble/shape_regime.py`,
+  `analysis/shape_regime_integration.md`) — no longer just a standalone
+  finding. Own living plan and status:
   `mass-transfer-study/STUDY_PLAN.md`; capstone result:
-  `mass-transfer-study/analysis/findings.md`. Two further increments are
-  planned but not started — see `PROJECT_THESIS.md` §6.3. Same
-  no-new-data constraint applies here as everywhere else in this repo.
+  `mass-transfer-study/analysis/findings.md`. One further increment (the
+  hydrate-coated residual deep-dive) is planned but not started — see
+  `PROJECT_THESIS.md` §6.3. Same no-new-data constraint applies here as
+  everywhere else in this repo.
