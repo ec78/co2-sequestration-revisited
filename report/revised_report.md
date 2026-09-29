@@ -570,7 +570,13 @@ bubble size. That finding was then integrated back into this report's own
 single-bubble model (Section 4.2), materially changing its own simulated
 rise velocities and dissolution fractions (Section 5) in the process, not
 left as a separate, disconnected result — leaving the hydrate-coated case
-as the harder, still-unresolved residual.
+as the harder, still-unresolved residual. A follow-up deep-dive into that
+residual tested, and quantitatively ruled out, the most standard
+candidate explanation (ordinary external boundary-layer resistance around
+an unchanged hydrate shell, reusing this same companion study's own
+validated machinery) — a real negative result that narrows, without
+closing, why hydrate-coated dissolution rates vary with flow the way the
+literature reports.
 
 What did not hold up: the premise that any of this adds up to an
 implementable, economically favorable disposal method. It does not,

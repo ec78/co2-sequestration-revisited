@@ -160,6 +160,113 @@ theory Phase B is about to implement. This is the second scope correction
 this dataset has produced (after Brewer's geometry issue) and is applied
 the same way: noted, not silently absorbed.
 
+## Phase G addendum: new sources for the hydrate-film-growth deep-dive
+
+Five additional sources, retrieved and read (abstracts/full text as
+access allowed) while investigating Phase D's flow-dependence working
+hypothesis further — see
+[../analysis/phase_g_series_resistance.md](../analysis/phase_g_series_resistance.md)
+for how these are used. Same access-limit caveat as the rest of this
+file: full text wasn't retrievable for most of these (paywalled), so
+findings below are abstract-level / secondary-source-corroborated, not
+independent primary-text verification, exactly as flagged elsewhere in
+this document.
+
+### Ogasawara, Yamasaki & Teng (2001) — *Energy & Fuels* 15:147–150
+**Real, correctly cited** (DOI 10.1021/ef000151n, confirmed via ACS and
+multiple independent listings). A water-tunnel study built specifically
+to measure what Phase D could only infer indirectly: mass transfer from
+CO2 drops **with and without a hydrate shell**, as a direct function of
+water velocity. Per secondary-source summaries (full text paywalled, not
+independently re-derived): drop-shrinkage rate increases with water
+velocity for both cases; the hydrate-shelled case's transfer coefficient
+was evaluated via "a series-mass-transfer model" (external convective
+resistance in series with the shell's own diffusive resistance) — the
+mechanism `../model/series_resistance.py` tests quantitatively. Reported
+aggregate numbers (solvent-side coefficients ks ≈ 1.5×10⁻⁴–7.5×10⁻⁴ m/s,
+Sherwood numbers ≈ 7–37) came through a secondary synthesis without a
+clear statement of which case (shelled vs. bare) or velocity they
+correspond to — **ambiguous, not resolved, and deliberately not added to
+`coefficients.csv`** as a result; forcing an unverifiable label onto a
+number would be worse than leaving the gap explicit, per this project's
+standing practice (e.g. the Hirai 1.25×10⁻⁴ vs. 1.25×10⁻⁵ discrepancy
+above, carried as two candidates rather than silently resolved).
+
+### Teng, Yamasaki & Shindo (1996) — *Chemical Engineering Science* 51(22)
+**Real, correctly cited** (DOI 10.1016/0009-2509(96)00358-2). A different
+mechanism from flow-enhanced transfer, found while researching the same
+question: CO2 hydrate is a nonstoichiometric compound whose CO2 mole
+fraction *within the shell* (x_CO2^H) decreases as the shell grows; per
+the secondary-source summary, once x_CO2^H falls to ≈0.098 (from an
+initial ≈0.115), "the hydrate layer becomes unstable and collapses into
+hydrate clusters." This raises a genuinely different candidate
+explanation for flow-sensitivity, not tested quantitatively in this
+phase: episodic shell collapse-and-regrowth (rather than a
+steady-thickness diffusion barrier) would expose fresh, uncoated liquid
+CO2 to water periodically, and forced flow could plausibly accelerate the
+approach to this instability threshold (by speeding whatever process
+depletes CO2 from the shell) — a mechanism this phase's series-resistance
+test does not capture at all, since that test assumes a fixed, intact
+shell throughout. Flagged as a real alternative, not pursued further here
+for lack of a quantitative growth-vs-flow relationship to test it with.
+
+### Kar, Bhati, Acharya, Mhadeshwar, Venkataraman, Barckholtz & Bahadur (2021) — *Chemical Engineering Science* 234:116456
+**Real, fully open-access, read directly in full** (not just an
+abstract — a genuine exception to this file's usual access-limit caveat).
+Central finding, directly relevant to Phase D's working hypothesis:
+contrary to the widely-cited heat-transfer-controlled film-growth models
+this project's initial hypothesis leaned toward (Mori, 2001; Uchida
+et al., 1999), this paper presents scaling arguments — validated against
+multiple experimental datasets including CO2 hydrates specifically, all
+R² > 0.98 — showing heat transfer is **not** the rate-limiting mechanism
+for the initial (seconds-timescale) hydrate film-formation phase; water's
+high thermal effusivity keeps local temperature rise negligible relative
+to subcooling. The paper's own diffusion(mass-transfer)-limited
+alternative model explicitly states its fitting "growth rate constant" K
+depends on "hydrodynamic perturbations near the film front," citing a
+geometry-driven difference between a gas-bubble study and a bulk/planar
+study as illustration — but adds "the detailed dependence of K on...the
+hydrodynamic perturbations...is not currently explored." Important
+scope caveat for this project's own purposes: the paper's own conclusion
+distinguishes this fast initial *film-formation* phase (which it argues
+is diffusion-limited) from *later-stage* hydrate growth, stating plainly
+that "heat transfer will play a significant role in later stages of
+hydrate growth along with gas diffusion considerations through the
+hydrate layer" — i.e. the ~1000+ second timescale this project's Method H
+actually models (an already-coated bubble/droplet dissolving as it rises)
+is explicitly *not* the regime this paper's critique most directly
+targets, so it narrows rather than eliminates Mori-type heat-transfer
+mechanisms as relevant to this project's own problem.
+
+### Peng, Dandekar, Sun, Luo, Ma, Pang & Chen (2007) — *J. Phys. Chem. B* 111(43):12485–12493
+**Real, correctly cited.** Directly relevant geometry — hydrate film
+growth measured on a **single gas bubble suspended in water** (not a
+planar interface or a droplet), matching this project's own bubble
+geometry more closely than most of the Phase A dataset's liquid-droplet
+sources. Per the abstract: lateral film growth rates measured for
+CH4, C2H4, CO2, and gas mixtures at four fixed temperatures; film
+thickness inversely proportional to driving force (subcooling). **The
+bubble in this experiment was suspended (quiescent), not exposed to
+varying flow** — so this paper cannot itself supply a flow-velocity
+dependence, despite being the closest geometric match to this project's
+own hydrate-coated bubble problem found in this search.
+
+### Sun, Chen, Ma, Huang, Luo & Li (2007) — *J. Crystal Growth* 306:491–499
+**Real, correctly cited.** Same quiescent-gas-bubble geometry as Peng
+et al. above, extended to aqueous surfactant solutions (SDS). Per the
+abstract: SDS promotes hydrate film growth below ≈1000 mg/L (most
+efficient near 500 mg/L) and inhibits it above that. Also a quiescent
+experiment — no flow-velocity variable tested.
+
+**Net effect of these last two sources on this phase's scope**: the two
+studies that used the geometrically closest setup to this project's own
+problem (a suspended gas bubble) both deliberately held flow at zero,
+while the study that did vary flow (Ogasawara et al.) doesn't specify a
+disentangled shelled-vs-bare, velocity-resolved correlation recoverable
+without primary-text access. This is a genuine, confirmed gap in the
+accessible literature — not a search failure — consistent with Phase D's
+own original framing of this thread as the harder, less-standardized one.
+
 ## What this means for Phase B onward
 
 - Use the values as reported in the 2002 thesis, since exact primary-text

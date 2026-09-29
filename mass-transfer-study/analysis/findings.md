@@ -111,11 +111,17 @@ full table):
   separated from the non-hydrate bucket by hydrate state but not
   collapsed within itself. The 2002 thesis's own cited source (Hirai
   1996) reports this rate as flow-velocity-dependent, directly
-  contradicting the simple Reynolds-independence assumption — most
-  likely because flow affects hydrate shell thickness/growth rather than
-  violating diffusion-through-a-fixed-shell physics, though this
-  study can't fully confirm that without primary-text access
-  ([phase_d_findings.md](phase_d_findings.md)).
+  contradicting the simple Reynolds-independence assumption —
+  independently corroborated by a water-tunnel study built specifically
+  to measure this (Ogasawara et al., 2001). A follow-up deep-dive
+  quantitatively ruled out the most standard candidate mechanism
+  (external boundary-layer resistance alone, tested against this
+  project's own validated machinery — at most ~1.2–1.4× enhancement,
+  well short of the observed spread), strengthening rather than
+  resolving the case that the shell's own properties change with flow;
+  no accessible source gives a usable quantitative correlation for that
+  ([phase_d_findings.md](phase_d_findings.md),
+  [phase_g_series_resistance.md](phase_g_series_resistance.md)).
 - **A regime this study's theories don't cover well**: Cho & Choi's
   micro-bubbles sit at Reynolds numbers (0.0006–0.015) and Péclet numbers
   (0.3–9) below where either analytical theory was ever derived to

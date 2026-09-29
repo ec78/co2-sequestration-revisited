@@ -306,9 +306,61 @@ The Cho & Choi (2019) row was pulled directly from the primary paper.
       the parent project's PROJECT_THESIS.md — not aiming for publication
       polish at this stage.
 
+### Phase G — Flow-dependence / hydrate-film-growth deep-dive ✅ (partial, honestly reported)
+
+Follow-up to Phase D's flagged-but-untested working hypothesis (flow
+affects hydrate shell thickness/growth, not just a Reynolds-independent
+fixed-shell diffusion rate) — the item queued next in
+[../PROJECT_THESIS.md](../PROJECT_THESIS.md) §6.3, flagged in advance as
+genuinely new research rather than integration, and higher-risk than the
+shape-regime work that preceded it.
+- [x] Five new sources retrieved and read: a water-tunnel study measuring
+      hydrate-coated CO2-drop mass transfer directly as a function of
+      flow velocity (Ogasawara, Yamasaki & Teng, 2001); a hydrate-shell
+      compositional-instability/collapse mechanism (Teng, Yamasaki &
+      Shindo, 1996); a fully open-access 2021 paper presenting strong
+      evidence against heat-transfer-limited *initial* film formation,
+      with an important nuance reserving heat transfer a role in
+      *later-stage* growth — the regime this project's Method H actually
+      models (Kar et al., 2021); and two bubble-geometry (not droplet)
+      hydrate film-growth studies, both run at zero flow (Peng et al.,
+      2007; Sun et al., 2007). Full per-source detail:
+      [data/SOURCES.md](data/SOURCES.md)'s Phase G addendum.
+- [x] Implemented and quantitatively tested the most standard,
+      directly-implementable candidate mechanism — a two-film
+      series-resistance model (external convective boundary layer +
+      Method H's existing shell resistance), reusing this project's own
+      already-validated rigid-sphere Sherwood correlation rather than any
+      new unverified physics: `model/series_resistance.py`.
+- [x] **Result: a real negative finding.** The shell resistance dominates
+      so heavily that this mechanism predicts at most ~1.2–1.4×
+      enhancement from quiescent to fast forced flow — well short of the
+      literature's observed ~1.2–6× (Hirai vs. Fujioka) up to
+      ~3-order-of-magnitude (full hydrate-coated bucket) spread. External
+      boundary-layer resistance alone does not explain the observed
+      flow-sensitivity. Strengthens, rather than resolves, the case that
+      the hydrate shell's own properties (thickness, defects, or
+      collapse/regrowth dynamics) respond to flow — now backed by a named
+      candidate mechanism (Teng/Yamasaki/Shindo's instability threshold),
+      not just an unattributed hypothesis. Full account:
+      [analysis/phase_g_series_resistance.md](analysis/phase_g_series_resistance.md).
+- [x] **Deliberately did not change** `model/co2n2_bubble/mass_transfer.py`'s
+      Method H — a partial, order-of-magnitude-insufficient mechanism
+      isn't a sound basis for a quantitative correction to the main
+      thesis model; the flat literature-sourced rate remains the most
+      defensible choice.
+- Not pursued further: no accessible source gives a quantitative
+  shell-growth-vs-flow-velocity correlation (the two closest-geometry
+  studies held flow at zero; the one flow-varying study is paywalled past
+  its abstract) — a confirmed literature gap, not a search failure,
+  exactly as flagged when this thread was queued as the harder of the two
+  remaining options.
+
 ## 7. Status
 
-**All six phases (A–F) are done.** Capstone summary:
+**All six original phases (A–F) are done, plus Phase G** (a follow-up
+deep-dive, partial/negative result honestly reported — see above).
+Capstone summary:
 [analysis/findings.md](analysis/findings.md) — start there. Phase-by-phase
 detail: `data/SOURCES.md` and `data/coefficients.csv` (Phase A),
 `analysis/phase_b_findings.md` (rigid-sphere), `analysis/phase_c_findings.md`
@@ -385,15 +437,19 @@ simpler, well-verified Mendelson/Davies-Taylor forms rather than the full
 shape-regime machinery); Cho & Choi's low-Re/Pe regime, still unresolved
 by any theory in this study.
 
-**Next planned (agreed, not yet started) — the hydrate-coated residual
-deep-dive.** Of the items above, this is the one actually queued next
-(see [PROJECT_THESIS.md](../PROJECT_THESIS.md) §6.3 for the full framing,
-including the parallel thread of feeding the shape-regime finding back
-into the main thesis model instead/first). Working hypothesis: hydrate
-film thickness/growth depends on flow conditions (Hirai et al. 1996's own
-data already hints at this — `analysis/phase_d_findings.md`), which the
-current constant-rate `hydrate_shell.py` treatment doesn't capture.
-Flagged honestly as *harder* than the shape-regime work that just paid
-off — the literature for hydrate-film growth kinetics is less
-standardized, so this may cost more effort for a smaller or messier
-result, not a guaranteed repeat of Phase F's success.
+**The hydrate-coated residual deep-dive (Phase G) has since been run** —
+see above and `analysis/phase_g_series_resistance.md`. As flagged in
+advance, it did *not* repeat Phase F's success: the most standard,
+directly-testable candidate mechanism (external boundary-layer
+resistance in series with the existing fixed-shell rate) was implemented
+and quantitatively ruled out as a complete explanation, using this
+project's own validated machinery rather than new unverified physics.
+Two credible alternative mechanisms are now named and literature-sourced
+(shell thickness/defect response to flow; nonstoichiometric shell
+collapse, Teng/Yamasaki/Shindo 1996), but neither has an accessible,
+quantitative correlation to implement — a confirmed literature gap, not
+a search failure. `hydrate_shell.py`'s constant-rate treatment (and the
+main model's Method H) are deliberately left unchanged, since a
+partial, order-of-magnitude-insufficient mechanism isn't a sound basis
+for a quantitative correction. The ~2.9-order-of-magnitude hydrate-coated
+residual remains genuinely open.

@@ -116,7 +116,11 @@ to work with the document for now.
   `analysis/shape_regime_integration.md`) — no longer just a standalone
   finding. Own living plan and status:
   `mass-transfer-study/STUDY_PLAN.md`; capstone result:
-  `mass-transfer-study/analysis/findings.md`. One further increment (the
-  hydrate-coated residual deep-dive) is planned but not started — see
-  `PROJECT_THESIS.md` §6.3. Same no-new-data constraint applies here as
-  everywhere else in this repo.
+  `mass-transfer-study/analysis/findings.md`. Also complete through a
+  follow-up hydrate-film-growth deep-dive (`model/series_resistance.py`,
+  `analysis/phase_g_series_resistance.md`) — a partial, honestly-reported
+  negative result (rules out one candidate flow-dependence mechanism
+  quantitatively, doesn't close the ~2.9-order-of-magnitude hydrate-coated
+  residual). Nothing further is currently queued — see `PROJECT_THESIS.md`
+  §6.3/§6.4. Same no-new-data constraint applies here as everywhere else
+  in this repo.

@@ -493,26 +493,37 @@ main thesis model itself (§6.1's "Shape-regime integration" bullet,
 `model/co2n2_bubble/shape_regime.py`) — no longer just a standalone
 finding sitting alongside the thesis revisit, but wired into it.
 
-### 6.3 Next planned work (agreed, not yet started)
+**The hydrate-coated residual's flow-dependence — pursued as a deep-dive
+(Phase G), done as a partial, honestly-reported result.** Five new
+sources retrieved (a water-tunnel study directly measuring hydrate-coated
+CO2-drop mass transfer vs. flow velocity; a hydrate-shell compositional-
+instability/collapse mechanism; a 2021 paper complicating the original
+heat-transfer-based working hypothesis for the fast initial film-
+formation phase specifically, while leaving heat transfer's role in the
+*later-stage* growth this project's Method H actually models an open
+question; two bubble-geometry film-growth studies, both run at zero
+flow). The most standard, directly-implementable candidate mechanism —
+external boundary-layer resistance in series with Method H's existing
+shell resistance, reusing this project's own validated Sherwood-
+correlation machinery rather than any new unverified physics — was
+implemented and quantitatively tested (`mass-transfer-study/model/series_resistance.py`)
+and found insufficient: it predicts at most ~1.2–1.4× enhancement from
+flow, well short of the literature's observed ~1.2–6× (or up to
+~3-orders-of-magnitude across the full hydrate-coated bucket). A real,
+useful negative result, not a non-result — it rules out one plausible
+mechanism with a number rather than a guess, and narrows (without
+resolving) what's actually going on. `mass_transfer.py`'s Method H is
+**deliberately left unchanged** in the main model — a partial mechanism
+isn't a sound basis for a quantitative correction. Full account:
+`mass-transfer-study/analysis/phase_g_series_resistance.md`.
 
-One thread remains queued from the two originally agreed:
+### 6.3 Next planned work
 
-1. **Hydrate-coated residual deep-dive.** The larger of the mass-transfer
-   study's two reconciliation gaps (~2.9 orders of magnitude, vs. Cho &
-   Choi's single stress case). Working hypothesis, not yet tested:
-   hydrate *film thickness/growth* depends on flow conditions (Hirai et
-   al. 1996's own data hints at this — see
-   `mass-transfer-study/analysis/phase_d_findings.md`), which the current
-   constant-rate model doesn't capture. **This is genuinely new research,
-   not integration** — flagged as such because the literature for
-   hydrate-film growth kinetics is less standardized than the
-   bubble-shape correlations that just worked out well, so there's a real
-   chance this costs more effort for a smaller or messier payoff. Would
-   extend `mass-transfer-study/model/hydrate_shell.py` and its own
-   `STUDY_PLAN.md`.
-
-   (The other originally queued thread — feeding the shape-regime finding
-   back into the main thesis model — is done; see §6.1.)
+Both threads originally queued from the mass-transfer study are now
+done — shape-regime integration (§6.1) and the hydrate-coated residual
+deep-dive (§6.2, above), the latter a partial/negative result honestly
+reported rather than a closed gap. Nothing is currently queued; see §6.4
+for lower-priority options discussed but not agreed to pursue next.
 
 ### 6.4 Other options discussed but not queued
 
