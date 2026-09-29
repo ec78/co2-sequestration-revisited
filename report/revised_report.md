@@ -345,7 +345,28 @@ Rise velocity is governed by a force balance on a rigid sphere (Mori &
 Mochizuki, 1998; a Weber-number argument justifies treating the bubble as
 non-deforming), discretized and solved implicitly each timestep against
 an iteratively updated drag coefficient — reproduced from the original's
-own MATLAB structure essentially unchanged.
+own MATLAB structure essentially unchanged, but no longer the whole
+story: see the next subsection.
+
+**Bubble shape — added in this revision, not present in the original.**
+The companion mass-transfer-coefficient study (Appendix; standalone,
+grown out of this project's own literature review) found that this
+model's own ~1 cm bubbles actually sit in the shape-*deformed* regime the
+original's Weber-number argument was meant to rule out — not a
+contradiction of the original so much as a check the original itself
+never had the tooling to run. This revision now checks the bubble's
+Eötvös number every timestep and, whenever it indicates a deformed shape,
+substitutes an independently-verified ellipsoidal (Mendelson, 1967) or
+spherical-cap (Davies & Taylor, 1950) terminal velocity for the
+rigid-sphere force balance, together with a correspondingly different
+mass-transfer coefficient for Method A. Hydrate-coated bubbles are
+deliberately excluded from this substitution — a hydrate shell is a rigid
+interface, the opposite premise from the deformable-interface theories
+this uses. Full account, including the new surface-tension parameter this
+required and the numerical check justifying treating rise velocity as
+quasi-steady at each timestep: [EQUATIONS_SPEC.md
+§5b](../model/EQUATIONS_SPEC.md). This is not a minor refinement — see
+Section 5.
 
 ## 5. Simulation Results
 
@@ -362,8 +383,16 @@ accounting of what can and cannot be checked).
 CO2/N2 mixtures — that low-purity bubbles *accelerate* as they rise, as
 the insoluble N2 fraction expands under decreasing pressure and lowers
 bubble density — reproduces cleanly. A representative run (15% CO2
-injected at 1000 m) shows rise velocity increasing from 0.53 to 1.13 m/s
-and diameter growing from 1.0 to 4.6 cm over the ascent.
+injected at 1000 m) shows rise velocity increasing from 0.24 to 0.32 m/s
+and diameter growing from 1.0 to 4.6 cm over the ascent. (These velocities
+are lower, and the range narrower, than an earlier checkpoint of this
+model reported — 0.53 to 1.13 m/s — because that checkpoint used
+rigid-sphere theory throughout; §4.2's shape-regime addition now applies
+across essentially this entire trajectory, and 0.2–0.3 m/s is also the
+better-grounded number: it matches the well-documented experimental fact
+that mm-to-cm bubbles in water rise at a roughly size-independent speed,
+which rigid-sphere theory does not reproduce. See
+[analysis/shape_regime_integration.md](../analysis/shape_regime_integration.md).)
 
 **What required the equation-of-state fix to reproduce.** The original's
 companion claim — that *pure* CO2 bubbles behave oppositely, decelerating
@@ -377,26 +406,42 @@ slow, hydrate-limited shrinkage at depth, followed by a rapid transition
 near the hydrate boundary — is a substantively better match to the
 original's qualitative description than a model without hydrate physics
 can produce, and it is a direct, mechanistic illustration of why hydrate
-formation matters as much as Section 2 says it does.
+formation matters as much as Section 2 says it does. (The hydrate-coated
+shrinkage itself is deliberately unaffected by the shape-regime addition —
+EQUATIONS_SPEC.md §5b keeps hydrate-coated bubbles on the rigid-sphere
+treatment throughout, since a hydrate shell has no deformable interface
+for shape theory to apply to.)
 
-**Method A vs. Method B: a genuine confirmation, not just a
-reproduction.** The original report's own Chapter 5 states that its
-Sherwood-correlation approach (Method A) "predicts much faster
-dissolution rates" than its constant-flux approach (Method B). This
-reimplementation confirms that ordering independently: across every
-scenario tested, Method A dissolves 100% of the injected CO2 well before
-the bubble reaches the surface, while Method B gives a more graded
-35–92% range depending on depth and composition. Tracing the mechanism
-further than the original's own text does: Method A's effective
-dissolution flux comes out roughly 20 times larger than Method B's
-directly-reported literature flux at representative mid-column
-conditions. Upgrading the solubility model from an approximate baseline
-to the properly validated Duan & Sun (2003) model reduced the solubility
+**Method A vs. Method B: a genuine confirmation, sharpened by the
+shape-regime addition, not undermined by it.** The original report's own
+Chapter 5 states that its Sherwood-correlation approach (Method A)
+"predicts much faster dissolution rates" than its constant-flux approach
+(Method B). This reimplementation confirms that ordering independently:
+across every scenario tested, Method A dissolves 100% of the injected CO2
+well before the bubble reaches the surface. Method B, whose own rate
+formula is unaffected by bubble shape, still shows a large *indirect*
+effect: because shape-deformed bubbles rise more slowly than rigid-sphere
+theory predicted, they spend longer at depth, so Method B's dissolved
+fraction rose from an earlier 35–92% range to **87–100%** across the same
+scenario matrix — now closely matching, rather than falling well short
+of, the original's own claim that ≥95% of injected CO2 dissolves before
+reaching the mixed layer for injection above ~500 m. Tracing the
+mechanism further than the original's own text does: Method A's effective
+dissolution flux, now also shape-regime-aware, comes out roughly **140
+times** larger than Method B's directly-reported literature flux at
+representative mid-column conditions (up from an earlier ~20×, once
+Method A's own mass-transfer coefficient became shape-aware too — the
+deformed-bubble correlation it now uses in place of the rigid-sphere one
+predicts substantially higher transfer at the same conditions, a known,
+independently-documented property of that correlation, not an artifact).
+Upgrading the solubility model from an approximate baseline to the
+properly validated Duan & Sun (2003) model reduced the solubility
 estimate feeding Method A by 5–25% — the theoretically expected direction
-— but nowhere near enough to change the 100%-every-time result. That is a
-genuine, useful finding in its own right: **Method A's speed relative to
-Method B is a robust property of the Sherwood-correlation approach at
-this bubble size, not an artifact of an imprecise solubility input.**
+— but nowhere near enough to change the 100%-every-time result, and
+neither did the subsequent shape-regime addition. That is a genuine,
+useful finding in its own right: **Method A's speed relative to Method B
+is a robust property of the Sherwood-correlation approach at this bubble
+size, not an artifact of an imprecise solubility or velocity input.**
 Method B — fully specified in the original with no reconstruction
 uncertainty — is used as this model's default for any quantitative
 comparison; Method A is retained as a directional check, per the
@@ -404,9 +449,14 @@ original's own use of it.
 
 Full run outputs, plots, and the detailed comparison tables behind these
 summaries are in
-[analysis/PHASE3_NOTES.md](../analysis/PHASE3_NOTES.md) and
-[analysis/method_a_vs_b.md](../analysis/method_a_vs_b.md), including two
-demonstration runs referenced here directly:
+[analysis/PHASE3_NOTES.md](../analysis/PHASE3_NOTES.md),
+[analysis/method_a_vs_b.md](../analysis/method_a_vs_b.md), and — for the
+shape-regime addition specifically, including the full before/after
+scenario matrix and its honest limitations (chiefly a new,
+literature-grounded but temperature-extrapolated surface-tension
+parameter this addition required) —
+[analysis/shape_regime_integration.md](../analysis/shape_regime_integration.md),
+including two demonstration runs referenced here directly:
 
 - 500 m, 50% CO2 (Method B): [demo_500m_50pct.png](../analysis/demo_500m_50pct.png)
 - 1000 m, 100% CO2 with hydrate compensation active: [demo_1000m_pureCO2_hydrate.png](../analysis/demo_1000m_pureCO2_hydrate.png)
@@ -514,10 +564,13 @@ against the most recent literature available for this revision, still
 genuinely open in the field at large, though this revision's own
 companion study found that the non-hydrate, gas-bubble portion of it
 resolves to within about 1% once bubble *shape* — ellipsoidal or
-spherical-cap, not the idealized sphere every theory in this report
-otherwise assumes — is modeled correctly at a physically plausible bubble
-size, leaving the hydrate-coated case as the harder, still-unresolved
-residual.
+spherical-cap, not the idealized rigid sphere the original 2002 model
+assumed throughout — is modeled correctly at a physically plausible
+bubble size. That finding was then integrated back into this report's own
+single-bubble model (Section 4.2), materially changing its own simulated
+rise velocities and dissolution fractions (Section 5) in the process, not
+left as a separate, disconnected result — leaving the hydrate-coated case
+as the harder, still-unresolved residual.
 
 What did not hold up: the premise that any of this adds up to an
 implementable, economically favorable disposal method. It does not,

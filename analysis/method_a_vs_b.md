@@ -6,6 +6,16 @@
 > hypothesized, but not by nearly enough to change Method A's
 > 100%-every-time result. See the new section at the end for the
 > corrected conclusion.
+>
+> **Second update**: shape-regime-aware rise velocity and mass transfer
+> have since been integrated (EQUATIONS_SPEC.md §5b). Method A's
+> saturating, 100%-every-scenario result below is confirmed *more*
+> strongly, not undermined — but the specific "~20×" flux-ratio figure
+> traced below is now superseded (it grew to ~141× at the same
+> representative conditions, once Method A's `k_L` became regime-aware
+> too). Method B's dissolved-percentage numbers throughout this file are
+> also now stale — full before/after table and mechanism:
+> [shape_regime_integration.md](shape_regime_integration.md).
 
 # Method A vs. Method B — mass-transfer comparison
 

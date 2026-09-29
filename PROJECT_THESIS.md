@@ -450,6 +450,20 @@ everything below rather than duplicating it.
   - *Report sync*: `revised_report.md` updated to match both of the above
     plus the mass-transfer study (§6.2) — it had drifted out of date
     before this sync.
+  - *Shape-regime integration* (`model/co2n2_bubble/shape_regime.py`):
+    the mass-transfer study's (§6.2) strongest result — this model's own
+    ~1 cm bubbles sit in the shape-deformed regime, not the spherical
+    regime rigid-sphere theory assumes — fed back into the main model's
+    rise velocity and Method A mass transfer. Not a minor correction:
+    Method B's dissolved fraction across the full scenario matrix rose
+    from a 35–92% spread to a tight **87–100%** band, now closely
+    matching (rather than falling well short of) the original's own
+    "≥95% dissolved above 500 m" claim. Required sourcing a new,
+    literature-grounded but temperature-extrapolated surface-tension
+    parameter the original model never needed (honestly flagged, not the
+    integration's strongest piece). Full account:
+    `analysis/shape_regime_integration.md`; design decisions:
+    `EQUATIONS_SPEC.md` §5b.
 - **Phase 6 (repo polish)**: still not started, still optional/low
   priority.
 
@@ -474,33 +488,31 @@ Cho & Choi's micro-bubble regime remains outside where any theory in this
 study gives dependable answers. Reported throughout as a **partial**
 reconciliation, not a solved problem.
 
+This ellipsoidal/spherical-cap result has since been fed back into the
+main thesis model itself (§6.1's "Shape-regime integration" bullet,
+`model/co2n2_bubble/shape_regime.py`) — no longer just a standalone
+finding sitting alongside the thesis revisit, but wired into it.
+
 ### 6.3 Next planned work (agreed, not yet started)
 
-Two threads the user has asked to pursue next, in this order of
-likely difficulty (easiest/most scoped first):
+One thread remains queued from the two originally agreed:
 
-1. **Feed the shape-regime finding back into the main thesis model.**
-   `model/co2n2_bubble/mass_transfer.py`'s Method A assumes rigid-sphere
-   behavior at the same ~1 cm bubble sizes this project's own
-   `mass-transfer-study/model/deformed_bubble.py` just showed sit in the
-   shape-deformed regime (Eo > 0.5). This is a **consistency/integration
-   task** — apply the already-built, already-verified deformed-bubble
-   theory to the main model rather than researching something new. Likely
-   touches `model/co2n2_bubble/mass_transfer.py` and `bubble_model.py`,
-   and should update `EQUATIONS_SPEC.md` and the relevant `analysis/`
-   files (and possibly `report/revised_report.md` again) to match.
-2. **Hydrate-coated residual deep-dive.** The larger of the two remaining
-   reconciliation gaps (~2.9 orders of magnitude, vs. Cho & Choi's single
-   stress case). Working hypothesis, not yet tested: hydrate *film
-   thickness/growth* depends on flow conditions (Hirai et al. 1996's own
-   data hints at this — see `mass-transfer-study/analysis/phase_d_findings.md`),
-   which the current constant-rate model doesn't capture. **This is
-   genuinely new research, not integration** — flagged as such because
-   the literature for hydrate-film growth kinetics is less standardized
-   than the bubble-shape correlations that just worked out well, so
-   there's a real chance this costs more effort for a smaller or messier
-   payoff. Would extend `mass-transfer-study/model/hydrate_shell.py` and
-   its own `STUDY_PLAN.md`.
+1. **Hydrate-coated residual deep-dive.** The larger of the mass-transfer
+   study's two reconciliation gaps (~2.9 orders of magnitude, vs. Cho &
+   Choi's single stress case). Working hypothesis, not yet tested:
+   hydrate *film thickness/growth* depends on flow conditions (Hirai et
+   al. 1996's own data hints at this — see
+   `mass-transfer-study/analysis/phase_d_findings.md`), which the current
+   constant-rate model doesn't capture. **This is genuinely new research,
+   not integration** — flagged as such because the literature for
+   hydrate-film growth kinetics is less standardized than the
+   bubble-shape correlations that just worked out well, so there's a real
+   chance this costs more effort for a smaller or messier payoff. Would
+   extend `mass-transfer-study/model/hydrate_shell.py` and its own
+   `STUDY_PLAN.md`.
+
+   (The other originally queued thread — feeding the shape-regime finding
+   back into the main thesis model — is done; see §6.1.)
 
 ### 6.4 Other options discussed but not queued
 

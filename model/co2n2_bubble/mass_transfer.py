@@ -7,7 +7,7 @@ composition.
 
 import numpy as np
 
-from . import seawater, hydrate_boundary
+from . import seawater, hydrate_boundary, shape_regime
 from .constants import MOLAR_MASS
 
 _HIRAI_FLUX_KG_M2_S = 1.25e-4  # Hirai et al. (1996), non-hydrate case
@@ -54,11 +54,34 @@ def _diffusivity_co2_water_m2_s(mu_water_cP: float) -> float:
 
 
 def method_a_kL(Db_m: float, U_m_s: float, rho_sea: float,
-                 mu_sea_mPas: float, T_K: float) -> float:
-    """Mass transfer coefficient k_L [m/s] via Sherwood-number correlation
-    for a rigid sphere (Eqs. 4-7/4-8/4-9), Mori & Mochizuki (1998) style.
+                 mu_sea_mPas: float, T_K: float, regime: str = "spherical") -> float:
+    """Mass transfer coefficient k_L [m/s]. **Regime-aware as of this
+    revision** -- EQUATIONS_SPEC.md section 5b.
+
+    regime == "spherical" (the only case before this revision, and still
+    the case whenever the bubble is hydrate-coated, per bubble_model.py's
+    dispatch): the original rigid-sphere Sherwood-number correlation
+    (Eqs. 4-7/4-8/4-9), Mori & Mochizuki (1998) style, unchanged.
+
+    regime in {"ellipsoidal", "cap"}: reuses
+    mass-transfer-study/model/deformed_bubble.py's validated Levich
+    penetration-theory k_L (shape_regime.deformed_kL) with U_m_s already
+    the regime-correct terminal velocity the caller computed -- not the
+    rigid-sphere correlation, which has no basis once the bubble has
+    deformed (see shape_regime.py's module docstring). Deliberately does
+    *not* fall back to a mobile-but-spherical treatment the way
+    deformed_bubble.py's own "spherical" branch does -- this model's
+    default is the rigid/contaminated regime because real seawater is
+    rarely perfectly clean (STUDY_PLAN.md section 3.2), so mobile theory
+    is reserved for the cases that have an independent, shape-driven
+    reason to circulate strongly (ellipsoidal/cap), not used as a general
+    substitute for rigid-sphere theory.
     """
     D_gw = _diffusivity_co2_water_m2_s(mu_sea_mPas)
+
+    if regime in ("ellipsoidal", "cap"):
+        return shape_regime.deformed_kL(Db_m, U_m_s, D_gw)
+
     mu_pa_s = mu_sea_mPas / 1000.0
     Re = U_m_s * Db_m * rho_sea / mu_pa_s
     Sc = mu_pa_s / (rho_sea * D_gw)
@@ -72,9 +95,10 @@ def method_a_kL(Db_m: float, U_m_s: float, rho_sea: float,
 
 
 def method_a_rate(Db_m: float, U_m_s: float, rho_sea: float,
-                   mu_sea_mPas: float, T_K: float, x_gs: float) -> float:
+                   mu_sea_mPas: float, T_K: float, x_gs: float,
+                   regime: str = "spherical") -> float:
     """Eq. 4-5 with k_L from method_a_kL: dmass/dt = -pi Db^2 kL rho_w x_gs."""
-    kL = method_a_kL(Db_m, U_m_s, rho_sea, mu_sea_mPas, T_K)
+    kL = method_a_kL(Db_m, U_m_s, rho_sea, mu_sea_mPas, T_K, regime=regime)
     area_m2 = np.pi * Db_m**2
     kg_per_s = area_m2 * kL * rho_sea * x_gs
     return kg_per_s * 1000.0 / MOLAR_MASS[0]
@@ -94,12 +118,18 @@ def method_h_rate(Db_m: float, rho_bub: float) -> float:
 
 def dissolution_rate(method: str, *, Db_m: float, x_co2: float,
                       U_m_s: float, rho_sea: float, mu_sea_mPas: float,
-                      T_K: float, x_gs: float, rho_bub: float = None) -> float:
-    """Dispatch to the requested method. method in {"A", "B", "H"}."""
+                      T_K: float, x_gs: float, rho_bub: float = None,
+                      regime: str = "spherical") -> float:
+    """Dispatch to the requested method. method in {"A", "B", "H"}.
+
+    regime only matters for method "A" (see method_a_kL) -- Methods B and
+    H don't depend on rise velocity or bubble shape (EQUATIONS_SPEC.md
+    section 5b).
+    """
     if method == "B":
         return method_b_rate(Db_m, x_co2)
     if method == "A":
-        return method_a_rate(Db_m, U_m_s, rho_sea, mu_sea_mPas, T_K, x_gs)
+        return method_a_rate(Db_m, U_m_s, rho_sea, mu_sea_mPas, T_K, x_gs, regime=regime)
     if method == "H":
         return method_h_rate(Db_m, rho_bub)
     raise ValueError(f"Unknown mass transfer method: {method!r}")

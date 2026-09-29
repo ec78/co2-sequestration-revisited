@@ -225,6 +225,122 @@ a standard seawater dynamic-viscosity correlation (temperature- and
 salinity-dependent); flagged as an assumption, not a recovered original
 formula.
 
+## 5b. Shape-regime-aware rise velocity and mass transfer — **[MODERNIZED]**
+
+Integrates [../mass-transfer-study/](../mass-transfer-study/)'s strongest
+result (its own `model/deformed_bubble.py`, verified against a real
+literature coefficient to within 1% —
+[../mass-transfer-study/analysis/phase_f_deformed_bubble.md](../mass-transfer-study/analysis/phase_f_deformed_bubble.md))
+back into this model. §5's rigid-sphere force balance assumes an
+undeformed sphere throughout (justified in the original text by a
+Weber-number argument, §1 above); the mass-transfer study found that this
+model's own ~1 cm bubble sizes actually sit in the shape-*deformed*
+regime (Eötvös number 0.5 to >100 across that study's own Saito et al.
+2000 comparison), not the spherical regime §5 assumes. This section
+brings that regime awareness into the transient simulation
+(`bubble_model.solve_rise_velocity_shape_aware`, `mass_transfer.py`'s
+`method_a_kL`), rather than leaving it as a separate, disconnected
+finding.
+
+**Eötvös number and regime thresholds**: `Eo = g|ρ_sea - ρ_bub|Db²/σ`,
+dispatched at `Eo < 0.5` (spherical), `0.5 ≤ Eo < 40` (ellipsoidal),
+`Eo ≥ 40` (spherical cap) — the same Clift-Grace-Weber (1978) thresholds
+`mass-transfer-study/model/deformed_bubble.py` uses, not independently
+re-derived (`model/co2n2_bubble/shape_regime.py`).
+
+**Ellipsoidal regime**: Mendelson's (1967) wave-analogy terminal velocity,
+`U = sqrt(2σ/(ρ_sea·Db) + g·Db/2)`. **Spherical-cap regime**: Davies &
+Taylor's (1950) result, `U = (2/3)sqrt(g·Db/2)`. Both formulas are used
+as-is from the mass-transfer study, which independently verified each
+against a source reproducing it directly before use — not re-verified
+again here, since nothing about porting them into this model's own loop
+changes the formulas themselves.
+
+**Design decision — quasi-steady dispatch, numerically verified.**
+Mendelson's and Davies & Taylor's formulas are algebraic terminal-velocity
+results; there is no transient force-balance ODE version of them the way
+§5's `U_{n+1}` quadratic is for the rigid sphere. This implementation
+therefore treats rise velocity as quasi-steady at each timestep: at every
+step, the regime is re-evaluated from the *current* diameter/density, and
+if ellipsoidal or cap, `U_{n+1}` is simply the regime's terminal-velocity
+formula rather than an integrated quantity carried from `U_n`. This is
+only valid if velocity actually equilibrates much faster than the
+timestep — checked directly, not assumed: sub-stepping the existing
+rigid-sphere ODE from rest (`U=0`) at representative mid-scenario-matrix
+conditions (1 cm bubble, 1000 m, 50% CO2) reaches within 1% of its own
+terminal velocity in **~0.13 s** — over 15× faster than this model's own
+`Δt = 2 s` timestep, and 3-4 orders of magnitude faster than a typical
+full simulated rise (hundreds to ~1800 s in this model's own demo runs,
+`analysis/demo_*.csv`). The rigid-sphere case is, if anything, the
+*slower*-relaxing of the regimes checked here (a bare force balance, no
+analog of the deformed regimes' near-instantaneous wave/potential-flow
+response), so this is a conservative check, not a best-case one.
+
+**Design decision — hydrate-coated bubbles are excluded from this
+dispatch, regardless of Eötvös number.** A hydrate shell (§6's Method H)
+is a rigid, solid interface — the physical opposite of the deformable,
+responsive fluid interface both Mendelson's and Davies & Taylor's
+derivations require. So whenever `mass_transfer.in_hydrate_window` is
+active, the bubble keeps §5's original rigid-sphere ODE unconditionally,
+even if its Eötvös number (computed from whatever forced-vapor density
+Method H uses) would otherwise indicate a deformed regime. Rigid-sphere
+theory is, if anything, *more* physically appropriate for a hydrate-coated
+bubble than anywhere else in this model, not less — this is a
+strengthening of the rigid-sphere assumption's scope, not a compromise.
+
+**Surface tension, σ — new to this revision.** §§1-6 never needed a
+surface-tension parameter before (rigid-sphere theory throughout); this
+integration's Eötvös number does. `mass-transfer-study/model/mobile_sphere.py`
+used a flat placeholder (`σ = 0.074 N/m`, pure-water-like) for the same
+purpose. This implementation instead sources a pressure-dependent
+treatment (`seawater.interfacial_tension_N_m`), since pressure is exactly
+what varies across this model's own 300–1500 m scenario matrix and the
+literature is unambiguous that CO2-water interfacial tension is strongly
+pressure-dependent. Two retrieved sources: Hebach et al. (2002, *J. Chem.
+Eng. Data*), measuring CO2-water IFT dropping from ~72 mN/m near
+atmospheric pressure to ~30 mN/m by 12-20 MPa; Chalbaud et al. (2009,
+*Energy Procedia*/*Adv. Water Resour.*), reporting the same high-pressure
+plateau (~30 mN/m at 308 K) and finding brine salinity's effect on it
+negligible (supporting reuse of a seawater-salinity-independent CO2-water
+value here rather than a separate brine correlation). The implementation
+is a smooth two-parameter exponential interpolation between a
+near-atmospheric endpoint (0.074 N/m) and the high-pressure plateau
+(0.030 N/m, decay scale 40 bar, chosen to match the qualitative shape both
+sources report) — **not** a digitized reproduction of either source's
+primary data (inaccessible, same constraint as everywhere else in this
+project) and **not** fit at this model's own ocean temperatures. Both
+cited studies validate their correlations over 293–398 K; this model's own
+Eq. 4-6 gives 276–283 K across the scenario matrix, colder than either
+study's range — flagged honestly as an extrapolation, most likely biasing
+this model's Eötvös numbers slightly high (surface tension tends to rise
+as temperature falls, and a lower assumed σ inflates Eo), not corrected
+further without new low-temperature CO2-water IFT data this project
+doesn't have access to. Full reasoning: `seawater.py`'s
+`interfacial_tension_N_m` docstring.
+
+**Effect on mass transfer (Method A only)**: `mass_transfer.method_a_kL`
+now takes a `regime` argument. In the spherical regime (including
+hydrate-active steps), it is unchanged — §6's rigid-sphere Sherwood
+correlation. In the ellipsoidal/cap regimes, it uses the same Levich
+penetration-theory `k_L` the mass-transfer study validated
+(`shape_regime.deformed_kL`, reusing this model's own diffusivity
+correlation), with the already-regime-correct velocity substituted in.
+**Deliberately does not** fall back to a mobile-but-still-spherical
+treatment for the spherical case the way
+`mass-transfer-study/model/deformed_bubble.py`'s own spherical branch
+does (that module reuses `mobile_sphere.py`'s clean-bubble drag even for
+Eo < 0.5, for consistency with its own architecture) — this model's
+default is deliberately the rigid/contaminated regime, since real
+seawater is rarely perfectly clean
+([../mass-transfer-study/STUDY_PLAN.md](../mass-transfer-study/STUDY_PLAN.md)
+§3.2), so mobile-type theory is reserved here for cases with an
+independent, shape-driven reason to circulate strongly, not used as a
+general substitute for rigid-sphere theory. Methods B and H are unaffected
+in their own rate formulas (neither depends on velocity or shape), but
+their simulated *trajectories* still shift under this section, because
+rise velocity changes how long the bubble spends at each depth — see
+`analysis/shape_regime_integration.md` for the resulting numbers.
+
 ## 6. Mass transfer — two methods, both from the original — **[ORIGINAL,
    with RECONSTRUCTED sub-pieces noted]**
 
@@ -247,6 +363,16 @@ using the standard published Hayduk & Laudie (1974) diffusivity
 correlation rather than the possibly-corrupted transcription. Documented
 in code with a citation so it can be checked against the original text
 directly if a cleaner scan ever becomes available.
+
+**As of this revision, the Sherwood correlation above is used only in the
+spherical regime.** §5b (below the rise-velocity section) adds
+shape-regime awareness: in the ellipsoidal/spherical-cap regimes this
+model's own bubble sizes mostly occupy, `method_a_kL` uses a different,
+independently-validated `k_L` formula instead — see §5b for the full
+account. Not just a numerical refinement: at representative mid-column
+conditions (1000 m, 50% CO2, ellipsoidal regime), Method A's flux
+advantage over Method B grew from the ~20× `method_a_vs_b.md` originally
+reported to **~141×**, per `analysis/shape_regime_integration.md`.
 
 **Method B** (Hirai et al. 1996 constant rate, non-hydrate case):
 ```

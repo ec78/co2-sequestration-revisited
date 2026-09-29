@@ -56,13 +56,15 @@ def main() -> None:
             writer = csv.writer(f)
             writer.writerow(["time_s", "depth_m", "diameter_m", "velocity_m_s",
                               "co2_mole_frac", "rho_bubble", "rho_seawater",
-                              "mass_co2_lost_kg", "percent_co2_lost"])
+                              "mass_co2_lost_kg", "percent_co2_lost",
+                              "shape_regime", "eotvos"])
             for i in range(n):
                 writer.writerow([
                     result.time_s[i], result.depth_m[i], result.diameter_m[i],
                     result.velocity_m_s[i], result.co2_mole_frac[i],
                     result.rho_bubble[i], result.rho_seawater[i],
                     result.mass_co2_lost_kg[i], result.percent_co2_lost[i],
+                    result.shape_regime[i], result.eotvos[i],
                 ])
         print(f"Wrote {args.out}")
 

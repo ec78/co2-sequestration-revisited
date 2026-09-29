@@ -4,6 +4,13 @@
 > (EOS stable-root fix, Method H hydrate compensation) and the Method A
 > vs. B comparison this section originally called out as a next step. The
 > qualitative checks below should be read as the *before* picture.
+>
+> **Second update**: the "≥95% dissolved above 500 m" gap flagged below
+> as "not reproduced at that magnitude" is now largely closed, once
+> shape-regime-aware rise velocity was integrated (real bubbles at this
+> size rise slower than rigid-sphere theory predicted, so they spend more
+> time dissolving) — the 300/500 m rows now run 97.1-100.0%, not
+> 68-75%. Full account: [shape_regime_integration.md](shape_regime_integration.md).
 
 # Phase 3 checkpoint — first working Python model
 

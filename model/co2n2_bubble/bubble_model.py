@@ -9,7 +9,7 @@ from dataclasses import dataclass, field
 
 import numpy as np
 
-from . import eos, seawater, solubility, mass_transfer
+from . import eos, seawater, solubility, mass_transfer, shape_regime
 from .constants import G, MOLAR_MASS
 
 
@@ -50,6 +50,51 @@ def solve_rise_velocity(U_prev: float, Db_m: float, psi: float, gamma: float,
     return U_new  # best effort if it doesn't tighten further
 
 
+def solve_rise_velocity_shape_aware(U_prev: float, Db_m: float, psi: float,
+                                     gamma: float, rho_sea: float,
+                                     mu_sea_mPas: float, dt: float,
+                                     U_guess: float, rho_bub: float,
+                                     sigma_l: float, hydrate_active: bool,
+                                     max_iter: int = 100) -> tuple:
+    """Per-step rise velocity, with shape-regime dispatch layered on top of
+    the original rigid-sphere solver. EQUATIONS_SPEC.md section 5b.
+
+    Returns (U_new, regime, Eo): regime in {"spherical", "ellipsoidal",
+    "cap", "rigid_hydrate"}; Eo is None for the hydrate case (Eotvos-driven
+    shape theory doesn't apply there -- see shape_regime.py's docstring).
+
+    Quasi-steady design: the ellipsoidal/cap branches use Mendelson's and
+    Davies & Taylor's algebraic terminal-velocity formulas directly (no
+    analog of solve_rise_velocity's transient iteration exists for them),
+    justified by a direct numerical check that rise velocity relaxes to
+    terminal in ~0.1 s -- more than an order of magnitude faster than this
+    model's own dt, and 3-4 orders of magnitude faster than a typical full
+    simulated rise (see shape_regime.py's docstring for the numbers).
+
+    hydrate_active bubbles always keep the unchanged rigid-sphere ODE,
+    regardless of Eotvos number: a hydrate shell is a rigid interface, the
+    opposite premise from the deformable-interface theories this dispatch
+    otherwise applies (shape_regime.py's docstring).
+    """
+    if hydrate_active:
+        U_new = solve_rise_velocity(U_prev, Db_m, psi, gamma, rho_sea,
+                                     mu_sea_mPas, dt, U_guess, max_iter=max_iter)
+        return U_new, "rigid_hydrate", None
+
+    Eo = shape_regime.eotvos_number(Db_m, rho_sea, rho_bub, sigma_l)
+    regime = shape_regime.shape_regime(Eo)
+
+    if regime == "spherical":
+        U_new = solve_rise_velocity(U_prev, Db_m, psi, gamma, rho_sea,
+                                     mu_sea_mPas, dt, U_guess, max_iter=max_iter)
+    elif regime == "ellipsoidal":
+        U_new = shape_regime.terminal_velocity_mendelson(Db_m, rho_sea, sigma_l)
+    else:
+        U_new = shape_regime.terminal_velocity_davies_taylor(Db_m)
+
+    return U_new, regime, Eo
+
+
 @dataclass
 class SimulationResult:
     time_s: list = field(default_factory=list)
@@ -61,6 +106,8 @@ class SimulationResult:
     rho_seawater: list = field(default_factory=list)
     mass_co2_lost_kg: list = field(default_factory=list)
     percent_co2_lost: list = field(default_factory=list)
+    shape_regime: list = field(default_factory=list)
+    eotvos: list = field(default_factory=list)
 
 
 def simulate(depth0_m: float, co2_frac0: float, diameter0_m: float,
@@ -116,15 +163,18 @@ def simulate(depth0_m: float, co2_frac0: float, diameter0_m: float,
 
         psi = rho_sea / (rho_bub + 0.5 * rho_sea)
         gamma = rho_bub / rho_sea
+        sigma_l = seawater.interfacial_tension_N_m(depth)
 
-        U_new = solve_rise_velocity(U_prev, Db, psi, gamma, rho_sea, mu_sea,
-                                     dt_s, U_guess)
+        U_new, regime, Eo = solve_rise_velocity_shape_aware(
+            U_prev, Db, psi, gamma, rho_sea, mu_sea, dt_s, U_guess,
+            rho_bub, sigma_l, hydrate_active,
+        )
 
         active_method = "H" if hydrate_active else mass_transfer_method
         rate_mol_s = mass_transfer.dissolution_rate(
             active_method, Db_m=Db, x_co2=y[0], U_m_s=U_new,
             rho_sea=rho_sea, mu_sea_mPas=mu_sea, T_K=T, x_gs=x_gs,
-            rho_bub=rho_bub,
+            rho_bub=rho_bub, regime=regime,
         )
         moles_lost = min(rate_mol_s * dt_s, n_co2)
 
@@ -157,6 +207,8 @@ def simulate(depth0_m: float, co2_frac0: float, diameter0_m: float,
         result.rho_seawater.append(rho_sea)
         result.mass_co2_lost_kg.append(cumulative_mass_lost_kg)
         result.percent_co2_lost.append(percent_lost)
+        result.shape_regime.append(regime)
+        result.eotvos.append(Eo)
 
         depth = new_depth
         Db = Db_new
