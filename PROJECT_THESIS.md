@@ -392,11 +392,14 @@ it waits for Phase 3/4 substance to exist first.
       files) rather than being asserted fresh — the report is a synthesis
       of prior phases' work, not new research.
 
-### Phase 6 — Repo polish (optional, low priority)
-- Organize code/figures/data into a conventional structure once Phase 2
-  settles the deliverable format.
-- Add a README pointing newcomers at the final document vs. this working
-  roadmap.
+### Phase 6 — Repo polish (optional, low priority) ✅
+- [x] Code/figures/data were already organized into a conventional
+      structure as Phases 3/4 built it out (the repo-as-artifact layout
+      settled in Phase 2, §5b above) — no further reorganization needed.
+- [x] Added [README.md](README.md): points a newcomer at
+      `report/revised_report.md` as the finished deliverable vs. this
+      file as the working roadmap, gives a directory map, and states the
+      no-new-data/no-fabricated-citations constraints up front.
 
 ## 6. Status
 
@@ -464,10 +467,9 @@ everything below rather than duplicating it.
     integration's strongest piece). Full account:
     `analysis/shape_regime_integration.md`; design decisions:
     `EQUATIONS_SPEC.md` §5b.
-- **Phase 6 (repo polish)**: still not started, still optional/low
-  priority.
+- **Phase 6 (repo polish)**: done — [README.md](README.md) added.
 
-### 6.2 Mass-transfer-coefficient study — complete through its shape-regime follow-up
+### 6.2 Mass-transfer-coefficient study — complete through its hydrate-film-growth follow-up
 
 Standalone effort, not a further revision of the 2002 report — lives in
 [mass-transfer-study/](mass-transfer-study/) with its own living plan,
