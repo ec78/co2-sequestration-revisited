@@ -20,6 +20,15 @@ a specific claim in the report was reached, or pick up further work,
 done, in what order, and why, organized as a current-state summary
 (§6) rather than a chronological log.
 
+There's also an interactive dashboard, **Bubble Ascent Lab**
+(https://claude.ai/artifact/NgkgWj6FXAknZCoZAJDtna) — simulate a bubble
+release at any depth/composition/method combination from the original
+scenario matrix and watch it rise, deform, and dissolve, plus the
+shape-regime, mass-transfer, and economics findings as charts. Generated
+from [model/generate_dashboard_data.py](model/generate_dashboard_data.py),
+which re-runs this repo's own validated model rather than hand-entering
+numbers.
+
 ## Repo layout
 
 ```
