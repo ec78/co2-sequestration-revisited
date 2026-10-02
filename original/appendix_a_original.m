@@ -4,7 +4,7 @@
 % calculate seawater properties and the Peng Robinson equation of state to
 % determine gas properties.
 %
-% Author: Erica Clower
+% Author: Eric Clower
 % Stanford University
 % August 2002
 %

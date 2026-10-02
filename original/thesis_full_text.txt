@@ -8,7 +8,7 @@ IN PARTIAL FULFILLMENT OF THE REQUIREMENTS FOR THE
                     DEGREE OR MASTER OF SCIENCE
 
                                                                By
-                                                        Erica Clower
+                                                        Eric Clower
                                                         August, 2002
 
                                                                                                                                  1
@@ -70,7 +70,7 @@ I am incredibly indebted to Ray and Mark (and their kitchen table, at which the 
 portion of this was written). Thank you for doing so much without any obligation to do
 any of it at all.
 
-Thank you, Cathy, for helping me see the beauty outside my bubbles.
+Thank you, C. Ray, for helping me see the beauty outside my bubbles.
 
 Finally, deep gratitude is due to my family and all those who have given their
 unconditional love and support throughout my life. Without my Mom and Dad I would
@@ -686,10 +686,10 @@ It is assumed that all gases either dissolve into the seawater or are emitted th
 of the J-tube. Thus, flow in the downriser is single phase flow of CO2 saturated seawater.
 The pressure gradient for such flow is given by:
 
-( ) Pg                  V22            32µVLE
+( ) Pg                  V22            32ï¿½VLE
 =  gc  z  +  2gc             - V12  +   gcD2   (3-23)
 
-where µ is the fluid viscosity, V is the fluid velocity, and LE is the length of the pipe. For
+where ï¿½ is the fluid viscosity, V is the fluid velocity, and LE is the length of the pipe. For
 the J-tube model the kinetic energy term, the second term of equation 4-23, is negligible
 and can be omitted. To further simplify the model, the fluid properties, viscosity and
 density, are assumed to be constant throughout the length of the downriser.
@@ -1006,11 +1006,11 @@ equation modified as suggested by Hayduk and Laudie (1974):
                                                                                                                                 46
       Dgw   =    7.4(10-8 )(2.26 * M 2 )0.5 T                                      (4-10)
 
-                            µ    V 0.6
+                            ï¿½    V 0.6
 
                                  21
 
-where M2 is the molecular weight of the solvent (water), T is the temperature in K, µ2 is
+where M2 is the molecular weight of the solvent (water), T is the temperature in K, ï¿½2 is
 
 the viscosity of the solvent, and V1 is the molecular volume of the solute (CO2).
 
@@ -1184,7 +1184,7 @@ The pure CO2 bubble, on the other hand, show a rapid deceleration when their bub
 diameter goes to zero.
 
 5.1.4 CO2 Dissolution
-Figures 5-23 ­ 5-26 graph the percent of CO2 dissolved with depth for various injection
+Figures 5-23 ï¿½ 5-26 graph the percent of CO2 dissolved with depth for various injection
 compositions and depths. When injected at 300 m, initial bubble composition exhibits
 little impact on the dissolution of CO2 as measured by percentage of initial composition.
 At least 95% percent of the initial CO2 of all bubbles is dissolved by the time the bubbles
@@ -1563,7 +1563,7 @@ A. MATLAB Code
 %mixture bubble. It requires a user specified bubble diameter, concentration and
 %injection depth It utilizes the SEAWATER algorithms to calculate seawater properties
 %and the Peng Robinson equation of state to determine gas properties.
-%Author: Erica Clower
+%Author: Eric Clower
 %Stanford University
 %August 2002
 
