@@ -20,15 +20,27 @@ holdup-overprediction tendency.
 Provenance: the primary 1973 paper (Journal of Petroleum Technology,
 May 1973) isn't accessible either. Coefficients here come from an
 independent open-source implementation (PressureDrop.jl,
-github.com/jnoynaert/PressureDrop.jl, src/pressurecorrelations.jl, MIT
-license), cross-validated against a second independent source (a
-technical wiki reproducing the same holdup correlation coefficients and
-flow-regime boundary constants) for every coefficient that source
-covered -- all matched exactly. The inclination-correction (e, f, g, h)
-coefficients and the Payne correction factors were not independently
-re-confirmed against a second source; flagged as resting on the one
-verified implementation, same honesty standard as duan_sun.py's
-provenance note in ../co2n2_bubble/duan_sun.py.
+github.com/jnoynaert/PressureDrop.jl, src/pressurecorrelations.jl),
+cross-validated against a second independent source (a technical wiki
+reproducing the same holdup correlation coefficients and flow-regime
+boundary constants) for every coefficient that source covered -- all
+matched exactly. The inclination-correction (e, f, g, h) coefficients
+and the Payne correction factors were not independently re-confirmed
+against a second source; flagged as resting on the one verified
+implementation, same honesty standard as duan_sun.py's provenance note
+in ../co2n2_bubble/duan_sun.py.
+
+**License correction (pre-publication provenance audit)**: this
+docstring previously, incorrectly, described PressureDrop.jl as
+MIT-licensed. Checked directly against the live repository's LICENSE
+file: it is **Apache License 2.0**, copyright Jared M. Noynaert (2019).
+The MIT claim here was never accurate -- flagged and fixed rather than
+quietly corrected, since the earlier session that wrote this docstring
+apparently never verified the license it cited. Apache-2.0 carries
+different obligations than MIT (notably: state changes made to any
+modified file, and preserve the copyright/license notices), which this
+repo does not yet satisfy -- see the top-level LICENSE/NOTICE situation,
+still unresolved as of this correction.
 
 All formulas here are in SI units (the source implementation uses US
 field units bundled with unit-conversion constants; this module uses the
